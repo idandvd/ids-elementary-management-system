@@ -13,7 +13,7 @@ export class ApiService {
     // Uses http.get() to load data from a single API endpoint
     getFoods() 
     {
-        var x = this.http.get('http://localhost:54048/api/products');
+        var x = this.http.get('http://localhost:57128/api/students');
         return x;
     }
 }
