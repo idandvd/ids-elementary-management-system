@@ -1,6 +1,7 @@
 drop TABLE IF EXISTS tables_information;
+drop TABLE IF EXISTS sent_sms;
+drop TABLE IF EXISTS received_sms;
 drop TABLE IF EXISTS lessons_evaluations;
-drop TABLE IF EXISTS evaluations;
 drop TABLE IF EXISTS students_schedule;
 drop TABLE IF EXISTS classes_schedule;
 drop TABLE IF EXISTS lessons_grades;
@@ -153,6 +154,8 @@ CREATE TABLE parents(
 	UNIQUE KEY id_UNIQUE (id)
 )ENGINE=INNODB AUTO_INCREMENT=1 DEFAULT CHARSET=UTF8;
 
+
+
 CREATE TABLE students (
     id INT(11) NOT NULL AUTO_INCREMENT,
     first_name NVARCHAR(20) NOT NULL,
@@ -266,6 +269,38 @@ CREATE TABLE students_schedule (
         REFERENCES students(id)
         ON DELETE NO ACTION ON UPDATE NO ACTION
 )ENGINE=INNODB AUTO_INCREMENT=1 DEFAULT CHARSET=UTF8;
+
+CREATE TABLE sent_sms (
+    id INT(11) NOT NULL AUTO_INCREMENT,
+    sent_text NVARCHAR(200) NOT NULL,
+	confirmation_number INT(11) NOT NULL,
+    students_schedule_id INT(11) NULL,
+    parent_id INT(11) NULL,
+	PRIMARY KEY(id),
+	UNIQUE KEY id_UNIQUE (id),
+    CONSTRAINT sent_sms_students_schedule_id FOREIGN KEY (students_schedule_id)
+        REFERENCES students_schedule(id)
+        ON DELETE NO ACTION ON UPDATE NO ACTION,
+	CONSTRAINT sent_sms_parent_id FOREIGN KEY (parent_id)
+        REFERENCES parents(id)
+        ON DELETE NO ACTION ON UPDATE NO ACTION
+)ENGINE=INNODB AUTO_INCREMENT=1 DEFAULT CHARSET=UTF8;
+    
+CREATE TABLE received_sms (
+    id INT(11) NOT NULL AUTO_INCREMENT,
+    received_text NVARCHAR(200) NOT NULL,
+    students_schedule_id INT(11) NULL,
+    parent_id INT(11) NULL,
+	PRIMARY KEY(id),
+	UNIQUE KEY id_UNIQUE (id),
+    CONSTRAINT received_sms_students_schedule_id FOREIGN KEY (students_schedule_id)
+        REFERENCES students_schedule(id)
+        ON DELETE NO ACTION ON UPDATE NO ACTION,
+	CONSTRAINT received_sms_parent_id FOREIGN KEY (parent_id)
+        REFERENCES parents(id)
+        ON DELETE NO ACTION ON UPDATE NO ACTION
+)ENGINE=INNODB AUTO_INCREMENT=1 DEFAULT CHARSET=UTF8;
+    
 
 CREATE TABLE lessons_evaluations (
 	id INT(11) NOT NULL AUTO_INCREMENT,
