@@ -1,0 +1,17 @@
+<ul>
+  <li *ngFor="let controller of controllersNames">
+    {{controller.Name}}
+    <table class = "border" *ngIf="tables[controller.Name]!=null">
+      <thead>
+        <th *ngFor="let col of tables[controller.Name][0] | keyvalue">
+            {{col.key}}
+        </th>
+      </thead>
+      <tr *ngFor="let row of tables[controller.Name] ">
+          <td *ngFor="let col of row | keyvalue">
+              {{col.value}}
+          </td>
+        </tr>
+    </table>
+  </li>
+</ul>

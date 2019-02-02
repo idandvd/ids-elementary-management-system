@@ -24,29 +24,29 @@ drop table IF EXISTS preferences;
 
 CREATE TABLE years (
     id INT(11) NOT NULL AUTO_INCREMENT,
-	year_name YEAR(4) NOT NULL,
+	name YEAR(4) NOT NULL,
 	hebrew_year NVARCHAR(50),
 	PRIMARY KEY (id),
     UNIQUE KEY id_UNIQUE (id),
-	UNIQUE year_name_UNIQUE(year_name),
+	UNIQUE name_UNIQUE(name),
     UNIQUE hebrew_year_UNIQUE(hebrew_year)
 )ENGINE=INNODB AUTO_INCREMENT=1 DEFAULT CHARSET=UTF8;
 
 CREATE TABLE grades (
     id INT(11) NOT NULL AUTO_INCREMENT,
-    grade_name VARCHAR(50),
-    grade_number INT(11),
+    name VARCHAR(50),
+    number INT(11),
     PRIMARY KEY(id),
     UNIQUE KEY id_UNIQUE (id),
-    UNIQUE grade_name_UNIQUE(grade_name)
+    UNIQUE name_UNIQUE(name)
 )ENGINE=INNODB AUTO_INCREMENT=1 DEFAULT CHARSET=UTF8;  
 
 CREATE TABLE days (
     id INT(11) NOT NULL AUTO_INCREMENT,
-	day_name VARCHAR(20),
+	name VARCHAR(20),
     PRIMARY KEY (id),
     UNIQUE KEY id_UNIQUE (id),
-    UNIQUE day_name_UNIQUE(day_name)
+    UNIQUE name_UNIQUE(name)
 )ENGINE=INNODB AUTO_INCREMENT=1 DEFAULT CHARSET=UTF8;
 
 CREATE TABLE hours_in_day (
@@ -65,7 +65,7 @@ CREATE TABLE hours_in_day (
 
 CREATE TABLE user_types (
     id INT(11) NOT NULL AUTO_INCREMENT,
-	user_type_name NVARCHAR(50) DEFAULT NULL,
+	name NVARCHAR(50) DEFAULT NULL,
 	auth_level INT(11),
     PRIMARY KEY(id),
     UNIQUE KEY id_UNIQUE (id)
@@ -74,20 +74,21 @@ CREATE TABLE user_types (
 
 CREATE TABLE users (
     id INT(11) NOT NULL AUTO_INCREMENT,
-	user_name NVARCHAR(50) DEFAULT NULL,
+	username NVARCHAR(50) DEFAULT NULL,
 	password NVARCHAR(50) DEFAULT NULL,
     user_type_id INT(11) NOT NULL,
 	PRIMARY KEY(id),
     UNIQUE KEY id_UNIQUE (id),  
-	CONSTRAINT teachers_user_type_id FOREIGN KEY (user_type_id)
+    UNIQUE username_UNIQUE(username),
+	CONSTRAINT users_user_type_id FOREIGN KEY (user_type_id)
         REFERENCES user_types(id)
         ON DELETE NO ACTION ON UPDATE NO ACTION
 )ENGINE=INNODB AUTO_INCREMENT=1 DEFAULT CHARSET=UTF8;
   
 CREATE TABLE teacher_types (
     id INT(11) NOT NULL AUTO_INCREMENT,
-    teacher_type_name VARCHAR(50) DEFAULT NULL,
-    UNIQUE teacher_type_name_UNIQUE(teacher_type_name),
+    name VARCHAR(50) DEFAULT NULL,
+    UNIQUE name_UNIQUE(name),
     PRIMARY KEY (id),
     UNIQUE KEY id_UNIQUE (id)
 )ENGINE=INNODB AUTO_INCREMENT=1 DEFAULT CHARSET=UTF8;
@@ -101,7 +102,6 @@ CREATE TABLE teachers (
     year_id INT(11) NOT NULL,
 	PRIMARY KEY(id),
     UNIQUE KEY id_UNIQUE (id),
-    
 	CONSTRAINT teachers_teacher_type_id FOREIGN KEY (teacher_type_id)
         REFERENCES teacher_types(id)
         ON DELETE NO ACTION ON UPDATE NO ACTION,
@@ -116,11 +116,11 @@ CREATE TABLE teachers (
 CREATE TABLE classes (
     id INT(11) NOT NULL AUTO_INCREMENT,
     grade_id INT(11) NOT NULL,
-    class_number INT(11) NOT NULL,
+    number INT(11) NOT NULL,
     year_id INT(11) NOT NULL,
 	PRIMARY KEY(id),
     UNIQUE KEY id_UNIQUE (id),
-    UNIQUE KEY class_UNIQUE (grade_id,class_number,year_id),
+    UNIQUE KEY class_UNIQUE (grade_id,number,year_id),
 	CONSTRAINT classes_grade_id FOREIGN KEY (grade_id)
         REFERENCES grades(id)
         ON DELETE NO ACTION ON UPDATE NO ACTION,
@@ -166,7 +166,7 @@ CREATE TABLE students (
     year_id INT(11) NOT NULL,
 	picture_path nvarchar(1000) DEFAULT NULL,
     home_phone NVARCHAR(50) NULL DEFAULT '',
-    settlement NVARCHAR(50) NOT NULL,
+    settlement NVARCHAR(50) NULL DEFAULT '',
 	PRIMARY KEY(id),
 	UNIQUE KEY id_UNIQUE (id),
     CONSTRAINT students_mother_id FOREIGN KEY (mother_id)
@@ -185,14 +185,15 @@ CREATE TABLE students (
     
 CREATE TABLE lesson_types (
     id INT(11) NOT NULL AUTO_INCREMENT,
-	lesson_type_name NVARCHAR(50) DEFAULT NULL,
+	name NVARCHAR(50) DEFAULT NULL,
     PRIMARY KEY(id),
-    UNIQUE KEY id_UNIQUE (id)
+    UNIQUE KEY id_UNIQUE (id),
+    UNIQUE name_UNIQUE(name)
 )ENGINE=INNODB AUTO_INCREMENT=1 DEFAULT CHARSET=UTF8;
 
 CREATE TABLE lessons (
     id INT(11) NOT NULL AUTO_INCREMENT,
-    lesson_name VARCHAR(100) NOT NULL,
+    name VARCHAR(100) NOT NULL,
     teacher_id INT(11) NOT NULL,
     lesson_type_id INT(11) NOT NULL,
     priority INT(11) NOT NULL,
@@ -274,8 +275,8 @@ CREATE TABLE sent_sms (
     id INT(11) NOT NULL AUTO_INCREMENT,
     sent_text NVARCHAR(200) NOT NULL,
 	confirmation_number INT(11) NOT NULL,
-    students_schedule_id INT(11) NULL,
-    parent_id INT(11) NULL,
+    students_schedule_id INT(11) NOT NULL,
+    parent_id INT(11) NOT NULL,
 	PRIMARY KEY(id),
 	UNIQUE KEY id_UNIQUE (id),
     CONSTRAINT sent_sms_students_schedule_id FOREIGN KEY (students_schedule_id)
@@ -289,8 +290,8 @@ CREATE TABLE sent_sms (
 CREATE TABLE received_sms (
     id INT(11) NOT NULL AUTO_INCREMENT,
     received_text NVARCHAR(200) NOT NULL,
-    students_schedule_id INT(11) NULL,
-    parent_id INT(11) NULL,
+    students_schedule_id INT(11)NOT  NULL,
+    parent_id INT(11)NOT  NULL,
 	PRIMARY KEY(id),
 	UNIQUE KEY id_UNIQUE (id),
     CONSTRAINT received_sms_students_schedule_id FOREIGN KEY (students_schedule_id)
@@ -319,14 +320,14 @@ CREATE TABLE lessons_evaluations (
 
 
 
-CREATE TABLE tables_information (
-	id INT(11) NOT NULL AUTO_INCREMENT,
-	table_name VARCHAR(100),
-	display_column_query VARCHAR(1000),
-    hebrew_name nvarchar(200),
-    PRIMARY KEY (id),
-    UNIQUE KEY id_UNIQUE (id)
-)ENGINE=INNODB AUTO_INCREMENT=1 DEFAULT CHARSET=UTF8;
+-- CREATE TABLE tables_information (
+-- 	id INT(11) NOT NULL AUTO_INCREMENT,
+-- 	table_name VARCHAR(100),
+-- 	display_column_query VARCHAR(1000),
+--     hebrew_name nvarchar(200),
+--     PRIMARY KEY (id),
+--     UNIQUE KEY id_UNIQUE (id)
+-- )ENGINE=INNODB AUTO_INCREMENT=1 DEFAULT CHARSET=UTF8;
 
 CREATE TABLE preferences (
 	id INT(11) NOT NULL AUTO_INCREMENT,
@@ -375,4 +376,7 @@ LOCK TABLES `teacher_types` WRITE;
 INSERT INTO `teacher_types` VALUES (1,'מורה משלב'),(4,'מורה מקצועי'),(2,'מחנך'),(5,'מנהל'),(3,'רכז');
 /*!40000 ALTER TABLE `teacher_types` ENABLE KEYS */;
 UNLOCK TABLES;
+
+insert into classes(grade_id,number,year_id) values(1,2,1);
+insert into students(first_name,last_name,class_id,year_id) values('עידן','דוד',1,1);
 
