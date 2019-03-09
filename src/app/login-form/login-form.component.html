@@ -1,0 +1,29 @@
+<div class="row justify-content-center mt-3 ">
+    <div class="col col-sm-6 border pb-2 px-4">
+        <ngb-alert class="mt-2" *ngIf="successMessage" type="success" (close)="successMessage = null">{{ successMessage }}</ngb-alert>
+        <ngb-alert class="mt-2" *ngIf="errorMessage" type="danger" (close)="errorMessage = null">{{ errorMessage }}</ngb-alert>
+  
+      <h2>הוספת סוג מורה חדש</h2>
+      <form>
+        <div class="form-group row">
+          <div class="col">
+            <label for="username">שם משתמש:</label>
+            <input id="username" required [(ngModel)]="username" name="username" type="text" class="form-control"
+              placeholder="שם משתמש">
+          </div>
+        </div>
+        <div class="form-group row">
+            <div class="col">
+              <label for="password">ססמה:</label>
+              <input id="password" required [(ngModel)]="password" name="password" type="password" class="form-control"
+                placeholder="ססמה">
+            </div>
+          </div>
+        <div class="form-group row">
+          <div class="col text-center">
+              <button (click)="login()" class="btn btn-outline-dark">כניסה</button>
+            </div>
+          </div>
+      </form>
+    </div>
+  </div>

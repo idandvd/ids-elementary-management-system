@@ -1,0 +1,28 @@
+<div *ngIf="classScheduleTable">
+  <h2>{{classScheduleTable.Class.Grade.Name}}'{{classScheduleTable.Class.Number}} </h2>
+  <div class="row mt-5">
+    <div class="table-responsive col-12">
+      <table class="table table-bordered table-sm">
+        <thead>
+          <th>ימים/שעות</th>
+          <th *ngFor="let day of classScheduleTable.Days ">
+            {{day.Name}}
+          </th>
+        </thead>
+        <tr *ngFor="let hour of classScheduleTable.HoursInDay" [ngClass]="{'bg-light': hour.IsBreak}">
+          <td>{{hour.StartTime}}-{{hour.FinishTime}}</td>
+          <ng-container *ngIf="!hour.IsBreak">
+            <td *ngFor="let day of classScheduleTable.Days " class="h5 text-center">
+              <ng-container *ngIf="classScheduleTable.ClassSchedules[day.Id + '$' + hour.Id]">
+                {{classScheduleTable.ClassSchedules[day.Id + "$" + hour.Id].Name}}
+              </ng-container>
+            </td>
+          </ng-container>
+          <td *ngIf="hour.IsBreak" class="text-center" colspan="6">
+            הפסקה
+          </td>
+        </tr>
+      </table>
+    </div>
+  </div>
+</div>

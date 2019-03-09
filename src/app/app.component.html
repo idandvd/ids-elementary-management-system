@@ -1,5 +1,7 @@
-<div class="container-fluid" >
-  
-      <app-add-teacher-type-form></app-add-teacher-type-form>
-    
+<div class="container text-center" >
+    <app-navigation-bar *ngIf = "isLoggedIn"></app-navigation-bar>
+    <app-login-form *ngIf = "!isLoggedIn" (loggedInEvent)="receiveLoggedIn($event)"></app-login-form>
+    <router-outlet *ngIf = "isLoggedIn"></router-outlet>   
 </div>   
+<!--<app-login-form></app-login-form>-->
+ 

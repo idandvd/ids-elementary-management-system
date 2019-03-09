@@ -38,4 +38,12 @@ export class ShowEntireDataBaseComponent implements OnInit {
     }
   }
 
+  genHTML(controllersName)
+  {
+    
+
+    return "";
+
+  }
+
 }

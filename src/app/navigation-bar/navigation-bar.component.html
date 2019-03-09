@@ -1,0 +1,23 @@
+<nav id="navbar-site" class="nav nav-pills navbar-dark bg-dark navbar-expand-sm sticky-top mb-3 d-print-none">
+  <div class="container">
+    <div class="navbar-nav ml-sm-auto">
+      <div class="nav-item  nav-link text-light">
+        שלום
+      </div>
+      <a class="nav-item nav-link " id="navTeacherForm" href="/AddTeacherType">מערכת אישית</a>
+      <div class="dropdown">
+        <a class="nav-item nav-link dropdown-toggle " data-toggle="dropdown" id="classManageDropDown"
+          aria-haspopup="true" aria-expanded="false" href="#">ניהול כיתה</a>
+        <div class="dropdown-menu dropdown-menu-right text-right" aria-labelledby="classManageDropDown">
+          <a class="dropdown-item" href="/ClassPage">מערכת כיתה</a>
+          <a class="dropdown-item" href="/main">תלמידים</a>
+          <a class="dropdown-item" href="">הוספת תלמיד חדש</a>
+        </div>
+      </div>
+      <a class="nav-item nav-link" href="/AddLesson">שיעורים וקבוצות</a>
+      <a class="nav-item nav-link" (click)="logout()">התנתק</a>
+    </div>
+    <!-- navbar-nav -->
+  </div>
+  <!-- container -->
+</nav>  

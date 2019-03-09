@@ -1,0 +1,57 @@
+<div class="row justify-content-center mt-3 " *ngIf="teachers">
+  <div class="col col-sm-9 border pb-2 px-4">
+    <ngb-alert class="mt-2" *ngIf="successMessage" type="success" (close)="successMessage = null">{{ successMessage }}
+    </ngb-alert>
+    <ngb-alert class="mt-2" *ngIf="errorMessage" type="danger" (close)="errorMessage = null">{{ errorMessage }}
+    </ngb-alert>
+
+    <h2>הוספת שיעור</h2>
+    <div class="form-group form-inline row">
+      <label class="col-4" for="LessonName">שם שיעור</label>
+      <input id="LessonName" required [(ngModel)]="LessonName" name="LessonName" type="text" class="form-control col-8"
+        placeholder="שם שיעור">
+    </div>
+    <div class="form-group form-inline row">
+      <label class="col-4">מורה</label>
+      <select class="form-control col-8" [(ngModel)]="selectedTeacher">
+        <option *ngFor="let teacher of teachers" [ngValue]="teacher">
+          {{teacher.FirstName}} {{teacher.LastName}}
+        </option>
+      </select>
+    </div>
+    <div class="form-group row">
+      <label class="col-4">שם סוג שיעור</label>
+      <select class="form-control col-8" [(ngModel)]="selectedLessonType">
+        <option *ngFor="let lessonType of lessonTypes" [ngValue]="lessonType">
+          {{lessonType.Name}}
+        </option>
+      </select>
+    </div>
+
+    <div class="form-group form-inline row">
+      <label class="col-4" for="hasEvaluation">האם זה שיעור עם הערכה?</label>
+      <label class="">
+        <input required [(ngModel)]="hasEvaluation" name="hasEvaluation" [value]="true" type="radio"
+          class="form-control col-1 m-2">כן
+        <input required [(ngModel)]="hasEvaluation" name="hasEvaluation" [value]="false" type="radio"
+          class="form-control col-1 m-2">לא
+      </label>
+    </div>
+    <div class="form-group form-inline row">
+      <label class="col-4" for="hasGrade">האם זה שיעור עם ציון?</label>
+      <label class="">
+
+        <input id="hasGrade" required [(ngModel)]="hasGrade" name="hasGrade" [value]="true" type="radio"
+          class="form-control col-1 m-2">כן
+        <input id="hasNoGrade" required [(ngModel)]="hasGrade" name="hasGrade" [value]="false" type="radio"
+          class="form-control col-1 m-2">לא
+      </label>
+
+    </div>
+    <div class="form-group row">
+      <div class="col text-center">
+        <button (click)="addLesson()" class="btn btn-outline-dark">הוסף שיעור</button>
+      </div>
+    </div>
+  </div>
+</div>
