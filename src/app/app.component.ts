@@ -1,5 +1,8 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
+import { Subject } from 'rxjs';
+import { debounceTime } from 'rxjs/operators';
+
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -8,6 +11,8 @@ import { Router } from '@angular/router';
 
 
 export class AppComponent {
+
+
   title = 'ids-elementary-management-system';
   public isLoggedIn:boolean;
 
@@ -18,6 +23,7 @@ export class AppComponent {
     this.isLoggedIn = localStorage["loggedIn"] =="true"
     //this.isLoggedIn = false
 
+
      
   }
  
@@ -25,5 +31,6 @@ export class AppComponent {
   {
     this.isLoggedIn = $event;
   }
+
 
 }

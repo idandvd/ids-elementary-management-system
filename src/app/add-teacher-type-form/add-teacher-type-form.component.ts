@@ -3,6 +3,7 @@ import { ApiService } from '../api.service';
 import {Subject} from 'rxjs';
 import {debounceTime} from 'rxjs/operators';
 import { Observable } from 'rxjs';
+import { AlertService } from '../_services';
 
 @Component({
   selector: 'app-add-teacher-type-form',
@@ -15,24 +16,17 @@ export class AddTeacherTypeFormComponent implements OnInit {
   successMessage: string;
   errorMessage:string;
   public teacherTypeName:string;
-  constructor(private apiService: ApiService) { }
+  constructor(private apiService: ApiService,private alertService:AlertService) { }
 
   ngOnInit() {
-    this._success.subscribe((message) => this.successMessage = message);
-    this._success.pipe(
-      debounceTime(5000)
-    ).subscribe(() => this.successMessage = null);
-    this._error.subscribe((message) => this.errorMessage = message);
-    this._error.pipe(
-      debounceTime(5000)
-    ).subscribe(() => this.errorMessage = null);
+
   }
 
   public changeSuccessMessage() {
-    this._success.next("סוג מורה נוסף בהצלחה");
+    this.alertService.success("סוג מורה נוסף בהצלחה");
   }
   public changeErrorMessage() {
-    this._error.next("שגיאה שהוספת סוג מורה");
+    this.alertService.error("שגיאה שהוספת סוג מורה");
   }
 
   addTeacher()

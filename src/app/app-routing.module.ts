@@ -5,6 +5,8 @@ import { ShowEntireDataBaseComponent } from './show-entire-data-base/show-entire
 import { ClassPageComponent } from './class-page/class-page.component';
 import { AddLessonFormComponent } from './add-lesson-form/add-lesson-form.component';
 import { AddTeacherTypeFormComponent } from './add-teacher-type-form/add-teacher-type-form.component';
+import { AddStudentFormComponent } from './add-student-form/add-student-form.component';
+import { EditStudentFormComponent } from './edit-student-form/edit-student-form.component';
 
 const routes: Routes = [
   { path: 'login', component: LoginFormComponent },
@@ -12,6 +14,8 @@ const routes: Routes = [
   { path: 'ClassPage', component: ClassPageComponent },
   { path: 'AddLesson', component: AddLessonFormComponent },
   { path: 'AddTeacherType', component: AddTeacherTypeFormComponent },
+  { path: 'AddStudent', component: AddStudentFormComponent },
+  { path: 'EditStudent', component: EditStudentFormComponent },
   
 ];
 
@@ -22,5 +26,12 @@ const routes: Routes = [
 export class AppRoutingModule {}
 
 
-export const routingComponents = [LoginFormComponent,
-  ShowEntireDataBaseComponent]
+export const routingComponents = [
+  LoginFormComponent,
+  ShowEntireDataBaseComponent,
+  ClassPageComponent,
+  AddLessonFormComponent,
+  AddTeacherTypeFormComponent,
+  AddStudentFormComponent,
+
+]

@@ -1,7 +1,10 @@
-<div class="container text-center" >
-    <app-navigation-bar *ngIf = "isLoggedIn"></app-navigation-bar>
-    <app-login-form *ngIf = "!isLoggedIn" (loggedInEvent)="receiveLoggedIn($event)"></app-login-form>
-    <router-outlet *ngIf = "isLoggedIn"></router-outlet>   
-</div>   
+<div class="container text-center">
+
+    <app-navigation-bar *ngIf="isLoggedIn"></app-navigation-bar>
+
+    <app-login-form *ngIf="!isLoggedIn" (loggedInEvent)="receiveLoggedIn($event)"></app-login-form>
+    <alert></alert>
+    <router-outlet *ngIf="isLoggedIn"  >
+    </router-outlet>
+</div>
 <!--<app-login-form></app-login-form>-->
- 
