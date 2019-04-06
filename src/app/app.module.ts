@@ -5,6 +5,7 @@ import { ApiService } from './api.service';   // our custom service, see below
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import { DragDropModule } from '@angular/cdk/drag-drop';
 
 // import {MatSelectModule} from '@angular/material/select';
 // import {MatAutocompleteModule} from '@angular/material/autocomplete';
@@ -47,6 +48,7 @@ import { EditStudentFormComponent } from './edit-student-form/edit-student-form.
     MatInputModule,
     NgbModule,
     AppRoutingModule,
+    DragDropModule,
     // MatSelectModule,
     BrowserAnimationsModule,
     // MatAutocompleteModule

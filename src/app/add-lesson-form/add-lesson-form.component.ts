@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ApiService } from '../api.service';
 import { NONE_TYPE } from '@angular/compiler/src/output/output_ast';
+import { AlertService } from '../_services';
 
 @Component({
   selector: 'app-add-lesson-form',
@@ -17,7 +18,8 @@ export class AddLessonFormComponent implements OnInit {
   public hasEvaluation;
   public hasGrade;
 
-  constructor(private apiService: ApiService) { }
+  constructor(private apiService: ApiService,
+    private alertService: AlertService) { }
 
   ngOnInit() {
     this.getTeachers();
@@ -32,7 +34,7 @@ export class AddLessonFormComponent implements OnInit {
     this.apiService.getController("Teachers").subscribe(
       data => { this.teachers = data },
       err => console.error("teachers err"),
-      () => console.log('done loading foods')
+      () => console.log('done loading Teachers')
     );
   }
 
@@ -40,7 +42,7 @@ export class AddLessonFormComponent implements OnInit {
     this.apiService.getController("LessonTypes").subscribe(
       data => { this.lessonTypes = data },
       err => console.error("teachers err"),
-      () => console.log('done loading foods')
+      () => console.log('done loading LessonTypes')
     );
   }
   addLesson()
@@ -53,7 +55,7 @@ export class AddLessonFormComponent implements OnInit {
     lesson.HasGrade = this.hasGrade;
     lesson.Description = "";
     this.apiService.addModel(lesson,"Lessons").subscribe(
-      data => { },
+      data => {this.alertService.success("שיעור נוסף בהצלחה") },
       err =>{},
       () => {}
     );

@@ -9,13 +9,27 @@
             {{day.Name}}
           </th>
         </thead>
+        <!--{{classScheduleTable.ClassSchedules[day.Id + '$' + hour.Id].Id}}$-->
         <tr *ngFor="let hour of classScheduleTable.HoursInDay" [ngClass]="{'bg-light': hour.IsBreak}">
           <td>{{hour.StartTime}}-{{hour.FinishTime}}</td>
           <ng-container *ngIf="!hour.IsBreak">
-            <td *ngFor="let day of classScheduleTable.Days " class="h5 text-center">
-              <ng-container *ngIf="classScheduleTable.ClassSchedules[day.Id + '$' + hour.Id]">
-                {{classScheduleTable.ClassSchedules[day.Id + "$" + hour.Id].Name}}
-              </ng-container>
+
+            <td *ngFor="let day of classScheduleTable.Days" attr.id="Day{{day.Id}}$Hour{{hour.Id}}"
+              class="h5 text-center" ondrop="drop(event)" ondragover="allowDrop(event)">
+
+              <div *ngIf="classScheduleTable.ClassSchedules['Day' + day.Id + '$Hour' + hour.Id]"
+                attr.id="Lesson{{classScheduleTable.ClassSchedules['Day' + day.Id + '$Hour' +hour.Id].Id}}$Day{{day.Id}}$Hour{{hour.Id}}"
+                draggable="true" ondragstart="drag(event)">
+                {{classScheduleTable.ClassSchedules["Day" + day.Id + "$Hour" + hour.Id].Name}}
+                <br />
+                <div class="h6">
+
+                  {{classScheduleTable.ClassSchedules["Day" + day.Id + "$Hour" + hour.Id].Teacher.FirstName}}
+                  {{classScheduleTable.ClassSchedules["Day" + day.Id + "$Hour" + hour.Id].Teacher.LastName}}
+                </div>
+              </div>
+
+
             </td>
           </ng-container>
           <td *ngIf="hour.IsBreak" class="text-center" colspan="6">
@@ -25,4 +39,36 @@
       </table>
     </div>
   </div>
+
+
+  <div class="row justify-content-center" *ngIf="!isInEdit">
+    <div class="col-4">
+      <button (click)="editSchedule()" class="btn btn-outline-dark">עריכת מערכת</button>
+    </div>
+  </div>
+
+  <ng-container *ngIf="isInEdit && lessons">
+    <div class="row justify-content-center">
+      <div id="trash" class="border col-2 h2" ondrop="drop(event)" ondragover="allowDrop(event)">
+        מחיקת שיעור
+      </div>
+    </div>
+    <div class="row ">
+      <div attr.id="Lesson{{lesson.Id}}" class="border col-2 h5" *ngFor="let lesson of lessons" draggable="true"
+        ondragstart="drag(event)">
+        {{lesson.Name}}
+        <br />
+        <div class="h6">
+          {{lesson.Teacher.FirstName}} {{lesson.Teacher.LastName}}
+        </div>
+      </div>
+
+    </div>
+    <div class="row justify-content-center">
+      <div class="col-4">
+        <button (click)="saveSchedule()" class="btn btn-outline-dark">שמירת מערכת</button>
+      </div>
+    </div>
+  </ng-container>
+
 </div>
