@@ -39,3 +39,13 @@ function drop(ev) {
     }
     target.appendChild(newNode);
 }
+function saveSchedule(){
+    var table = document.getElementById("myTable");
+    for (var i = 0, row; row = table.rows[i]; i++) {
+        //iterate through rows
+        //rows would be accessed using the "row" variable assigned in the for loop
+        for (var j = 0, col; col = row.cells[j]; j++) {
+          console.log(col.children[0]);
+        }  
+     }
+  }

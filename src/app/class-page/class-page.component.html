@@ -1,74 +1,74 @@
 <div *ngIf="classScheduleTable">
-  <h2>{{classScheduleTable.Class.Grade.Name}}'{{classScheduleTable.Class.Number}} </h2>
-  <div class="row mt-5">
-    <div class="table-responsive col-12">
-      <table class="table table-bordered table-sm">
-        <thead>
-          <th>ימים/שעות</th>
-          <th *ngFor="let day of classScheduleTable.Days ">
-            {{day.Name}}
-          </th>
-        </thead>
-        <!--{{classScheduleTable.ClassSchedules[day.Id + '$' + hour.Id].Id}}$-->
-        <tr *ngFor="let hour of classScheduleTable.HoursInDay" [ngClass]="{'bg-light': hour.IsBreak}">
-          <td>{{hour.StartTime}}-{{hour.FinishTime}}</td>
-          <ng-container *ngIf="!hour.IsBreak">
+    <h2>{{classScheduleTable.Class.Grade.Name}}'{{classScheduleTable.Class.Number}} </h2>
+    <div class="row mt-5">
+        <div class="table-responsive col-12">
+            <table class="table table-bordered table-sm" #myTable [class.plus-cursor]="ctrlPressed">
+                <thead>
+                    <th>ימים/שעות</th>
+                    <th *ngFor="let day of classScheduleTable.Days ">
+                        {{day.Name}}
+                    </th>
+                </thead>
+                <tr *ngFor="let hour of classScheduleTable.HoursInDay" [ngClass]="{'bg-light': hour.IsBreak}">
+                    <td>{{hour.StartTime}}-{{hour.FinishTime}}</td>
+                    <ng-container *ngIf="!hour.IsBreak">
+                        <td *ngFor="let day of classScheduleTable.Days" attr.id="Day{{day.Id}}$Hour{{hour.Id}}"
+                            class="h5 text-center" cdkDropList [cdkDropListConnectedTo]="lists"
+                            [cdkDropListData]="dragableLessons[day.Id][hour.Id]" (cdkDropListDropped)="drop($event)">
 
-            <td *ngFor="let day of classScheduleTable.Days" attr.id="Day{{day.Id}}$Hour{{hour.Id}}"
-              class="h5 text-center" ondrop="drop(event)" ondragover="allowDrop(event)">
-
-              <div *ngIf="classScheduleTable.ClassSchedules['Day' + day.Id + '$Hour' + hour.Id]"
-                attr.id="Lesson{{classScheduleTable.ClassSchedules['Day' + day.Id + '$Hour' +hour.Id].Id}}$Day{{day.Id}}$Hour{{hour.Id}}"
-                draggable="true" ondragstart="drag(event)">
-                {{classScheduleTable.ClassSchedules["Day" + day.Id + "$Hour" + hour.Id].Name}}
-                <br />
-                <div class="h6">
-
-                  {{classScheduleTable.ClassSchedules["Day" + day.Id + "$Hour" + hour.Id].Teacher.FirstName}}
-                  {{classScheduleTable.ClassSchedules["Day" + day.Id + "$Hour" + hour.Id].Teacher.LastName}}
-                </div>
-              </div>
-
-
-            </td>
-          </ng-container>
-          <td *ngIf="hour.IsBreak" class="text-center" colspan="6">
-            הפסקה
-          </td>
-        </tr>
-      </table>
-    </div>
-  </div>
-
-
-  <div class="row justify-content-center" *ngIf="!isInEdit">
-    <div class="col-4">
-      <button (click)="editSchedule()" class="btn btn-outline-dark">עריכת מערכת</button>
-    </div>
-  </div>
-
-  <ng-container *ngIf="isInEdit && lessons">
-    <div class="row justify-content-center">
-      <div id="trash" class="border col-2 h2" ondrop="drop(event)" ondragover="allowDrop(event)">
-        מחיקת שיעור
-      </div>
-    </div>
-    <div class="row ">
-      <div attr.id="Lesson{{lesson.Id}}" class="border col-2 h5" *ngFor="let lesson of lessons" draggable="true"
-        ondragstart="drag(event)">
-        {{lesson.Name}}
-        <br />
-        <div class="h6">
-          {{lesson.Teacher.FirstName}} {{lesson.Teacher.LastName}}
+                            <div cdkDrag [cdkDragDisabled]="!isInEdit" *ngIf="dragableLessons[day.Id][hour.Id][0]">
+                                {{dragableLessons[day.Id][hour.Id][0].Name}}
+                                <br />
+                                <div class="h6">
+                                    {{dragableLessons[day.Id][hour.Id][0].Teacher.FirstName}}
+                                    {{dragableLessons[day.Id][hour.Id][0].Teacher.LastName}}
+                                </div>
+                            </div>
+                        </td>
+                    </ng-container>
+                    <td *ngIf="hour.IsBreak" class="text-center" colspan="6">
+                        הפסקה
+                    </td>
+                </tr>
+            </table>
         </div>
-      </div>
+    </div>
 
+    <div class="row justify-content-center" *ngIf="!isInEdit">
+        <div class="col-4">
+            <button (click)="editSchedule()" class="btn btn-outline-dark">עריכת מערכת</button>
+        </div>
     </div>
-    <div class="row justify-content-center">
-      <div class="col-4">
-        <button (click)="saveSchedule()" class="btn btn-outline-dark">שמירת מערכת</button>
-      </div>
-    </div>
-  </ng-container>
+
+    <ng-container *ngIf="isInEdit && lessons">
+        <div class="row justify-content-center border-3">
+            <div cdkDropList id="trashList" [cdkDropListConnectedTo]="lists" [cdkDropListData]="lists"
+                [cdkDropListData]="lessons" (cdkDropListDropped)="drop($event)">
+                <div id="trash" class=" col m-5 h2">
+                    <i class="fas fa-trash-alt"></i> מחיקת שיעור
+                </div>
+            </div>
+        </div>
+        <div class="">
+            <div cdkDropList [cdkDropListDisabled]="!isInEdit" id="lessonsList" [cdkDropListConnectedTo]="lists"
+                [cdkDropListData]="lessons" [cdkDropListEnterPredicate]="noMove" class="row">
+                <div cdkDrag *ngFor="let lesson of lessons" class="border col-2 h5">
+
+                    {{lesson.Name}}
+                    <br />
+                    <div class="h6">
+                        {{lesson.Teacher.FirstName}} {{lesson.Teacher.LastName}}
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+        <div class="row justify-content-center">
+            <div class="col-4">
+                <button (click)="saveSchedule()" class="btn btn-outline-dark">שמירת מערכת</button>
+            </div>
+        </div>
+    </ng-container>
 
 </div>

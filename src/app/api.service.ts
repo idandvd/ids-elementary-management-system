@@ -35,9 +35,14 @@ export class ApiService {
         //                                                            "{\"password\":\""+password+"\"}",{headers});
     }
 
-    addModel(model,modelName) {
+    saveClassSchecule(schedule) {
         const headers = new HttpHeaders({ 'Content-Type': 'application/json; charset=utf-8' });
-        return this.http.post(environment.api + modelName+"/", JSON.stringify(model) , { headers });
+        return this.http.post(environment.api + "ClassScheduleTable/", JSON.stringify(schedule), { headers });
+    }
+
+    addModel(model, modelName) {
+        const headers = new HttpHeaders({ 'Content-Type': 'application/json; charset=utf-8' });
+        return this.http.post(environment.api + modelName + "/", JSON.stringify(model), { headers });
 
     }
 
@@ -47,8 +52,7 @@ export class ApiService {
 
     }
 
-    uploadFile(formData)
-    {
+    uploadFile(formData) {
         const headers = new HttpHeaders({ 'Content-Type': 'application/json; charset=utf-8' });
         return this.http.post(environment.api + "Students/Import", formData)
 

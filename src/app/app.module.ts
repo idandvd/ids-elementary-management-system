@@ -6,6 +6,9 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import { DragDropModule } from '@angular/cdk/drag-drop';
+import {
+  MatIconModule
+} from '@angular/material';
 
 // import {MatSelectModule} from '@angular/material/select';
 // import {MatAutocompleteModule} from '@angular/material/autocomplete';
@@ -49,6 +52,7 @@ import { EditStudentFormComponent } from './edit-student-form/edit-student-form.
     NgbModule,
     AppRoutingModule,
     DragDropModule,
+    MatIconModule,
     // MatSelectModule,
     BrowserAnimationsModule,
     // MatAutocompleteModule

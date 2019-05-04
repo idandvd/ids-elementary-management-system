@@ -1,8 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, HostListener } from '@angular/core';
 import { ApiService } from '../api.service';
-import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
+import { CdkDragDrop, CdkDropList, CdkDrag, moveItemInArray, transferArrayItem, } from '@angular/cdk/drag-drop';
+import { ConnectedOverlayPositionChange } from '@angular/cdk/overlay';
+import { AlertService } from '../_services';
 
-declare function drag(ev:any):any;
+declare function drag(ev: any): any;
 
 @Component({
   selector: 'app-class-page',
@@ -13,11 +15,13 @@ export class ClassPageComponent implements OnInit {
 
   public classId;
   public classScheduleTable;
+  public dragableLessons;
+  public lists;
   public lessons;
-  public lessons2;
-  public lessons3;
   public isInEdit;
-  constructor(private apiService: ApiService) { }
+  public ctrlPressed = false;
+  constructor(private apiService: ApiService,
+              private alertService: AlertService) { }
 
   ngOnInit() {
     this.classId = 1;
@@ -28,42 +32,124 @@ export class ClassPageComponent implements OnInit {
 
   getClassSchedule() {
     this.apiService.getControllerById("ClassScheduleTable", this.classId).subscribe(
-      data => { this.classScheduleTable = data; },
+      data => { this.classScheduleTable = data; this.fillDragableLessons(data); },
       err => console.error(this.classId),
-      () => {console.log('done loading ClassScheduleTable');console.log(this.classScheduleTable) ;}
+      () => { console.log('done loading ClassScheduleTable'); console.log(this.classScheduleTable); }
     );
+
   }
-  editSchedule(){
+
+  fillDragableLessons(data) {
+    this.dragableLessons = {};
+    this.lists = [];
+    let listsCount = 0;
+    for (let day of data.Days) {
+      this.dragableLessons[day.Id] = {};
+      for (let hour of data.HoursInDay) {
+        if (!hour.IsBreak) {
+          this.lists.push('cdk-drop-list-' + listsCount);
+          this.dragableLessons[day.Id][hour.Id] = [];
+
+          if (data.ClassSchedules['Day' + day.Id + '$Hour' + hour.Id])
+            this.dragableLessons[day.Id][hour.Id].push(data.ClassSchedules['Day' + day.Id + '$Hour' + hour.Id]);
+
+          listsCount += 1;
+        }
+      }
+    }
+    this.lists.push('lessonsList');
+    this.lists.push('trashList');
+    console.log(this.lists);
+  }
+
+  fillClassSchedule() {
+    for (let day of this.classScheduleTable.Days) {
+
+      for (let hour of this.classScheduleTable.HoursInDay) {
+        if (!hour.IsBreak) {
+          if (this.dragableLessons[day.Id][hour.Id].length > 0) {
+            this.classScheduleTable.ClassSchedules['Day' + day.Id + '$Hour' + hour.Id] =
+              this.dragableLessons[day.Id][hour.Id][0];
+          }
+          else {
+            delete this.classScheduleTable.ClassSchedules['Day' + day.Id + '$Hour' + hour.Id]
+          }
+
+        }
+      }
+
+    }
+  }
+
+  editSchedule() {
     this.isInEdit = true;
     this.apiService.getController("Lessons").subscribe(
       data => { this.lessons = data },
       err => console.error(this.classId),
       () => console.log('done loading Lessons')
     );
-    this.lessons2=[];
-    this.lessons3=[];
-    // this.apiService.getController("Lessons").subscribe(
-    //   data => { this.lessons2 = data },
-    //   err => console.error(this.classId),
-    //   () => console.log('done loading Lessons')
-    // );
+
   }
-  saveSchedule(){
+  saveSchedule() {
     this.isInEdit = false;
     this.lessons = null;
+
+    console.log(this.dragableLessons);
+    this.fillClassSchedule();
+    this.apiService.saveClassSchecule(this.classScheduleTable)
+      .subscribe(
+        data => { this.alertService.success("מערכת נשמרה בהצלחה") },
+        err => { this.alertService.error("שגיאה בשמירת מערכת") },
+        () => { }
+      );
   }
+
+  @HostListener('window:keyup', ['$event'])
+  keyupEvent(event: KeyboardEvent) {
+    if (event.keyCode == 17)
+      this.ctrlPressed = false;
+
+  }
+
+  @HostListener('window:keydown', ['$event'])
+  keydownEvent(event: KeyboardEvent) {
+    if (event.keyCode == 17)
+      this.ctrlPressed = true;
+  }
+
+  noMove() {
+    return false;
+  }
+
   drop(event: CdkDragDrop<any[]>) {
+
+    if (this.ctrlPressed || event.previousContainer.id == "lessonsList") {
+      let copy = Object.assign({}, event.previousContainer.data[event.previousIndex])
+      event.container.data.push(copy);
+      return;
+    }
+    if (event.container.id == "trashList") {
+      event.previousContainer.data.splice(event.previousIndex)
+      return;
+    }
+    if (event.container.data.length >= 1) {
+      let copy = event.previousContainer.data[event.previousIndex]
+      event.previousContainer.data.splice(event.previousIndex)
+      event.previousContainer.data.push(event.container.data[event.currentIndex])
+      event.container.data.splice(event.currentIndex)
+      event.container.data.push(copy);
+      return;
+    }
     if (event.previousContainer === event.container) {
       moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
     } else {
       transferArrayItem(event.previousContainer.data,
-                        event.container.data,
-                        event.previousIndex,
-                        event.currentIndex);
+        event.container.data,
+        event.previousIndex,
+        event.currentIndex);
     }
+
+    console.log(event);
+    console.log(event.previousContainer === event.container);
   }
- 
-
-
-
 }
