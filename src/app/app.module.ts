@@ -25,7 +25,9 @@ import { NavigationBarComponent } from './navigation-bar/navigation-bar.componen
 import { ClassPageComponent } from './class-page/class-page.component';
 import { AddLessonFormComponent } from './add-lesson-form/add-lesson-form.component';
 import { AddStudentFormComponent } from './add-student-form/add-student-form.component';
-import { EditStudentFormComponent } from './edit-student-form/edit-student-form.component'; 
+import { EditStudentFormComponent } from './edit-student-form/edit-student-form.component';
+import { ManageClassesComponent } from './manage-classes/manage-classes.component';
+import { ManageTeachersComponent } from './manage-teachers/manage-teachers.component'; 
 
 
 
@@ -40,6 +42,8 @@ import { EditStudentFormComponent } from './edit-student-form/edit-student-form.
     AddStudentFormComponent,
     EditStudentFormComponent,
     AlertComponent,
+    ManageClassesComponent,
+    ManageTeachersComponent,
   ],
   imports: [
     BrowserModule,

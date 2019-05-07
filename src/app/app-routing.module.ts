@@ -7,6 +7,8 @@ import { AddLessonFormComponent } from './add-lesson-form/add-lesson-form.compon
 import { AddTeacherTypeFormComponent } from './add-teacher-type-form/add-teacher-type-form.component';
 import { AddStudentFormComponent } from './add-student-form/add-student-form.component';
 import { EditStudentFormComponent } from './edit-student-form/edit-student-form.component';
+import { ManageClassesComponent } from './manage-classes/manage-classes.component';
+import { ManageTeachersComponent } from './manage-teachers/manage-teachers.component';
 
 const routes: Routes = [
   { path: 'login', component: LoginFormComponent },
@@ -16,6 +18,8 @@ const routes: Routes = [
   { path: 'AddTeacherType', component: AddTeacherTypeFormComponent },
   { path: 'AddStudent', component: AddStudentFormComponent },
   { path: 'EditStudent', component: EditStudentFormComponent },
+  { path: 'ManageClasses', component: ManageClassesComponent },
+  { path: 'ManageTeachers', component: ManageTeachersComponent },
   
 ];
 

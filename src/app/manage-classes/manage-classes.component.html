@@ -1,0 +1,29 @@
+<form (ngSubmit)="saveClass()" *ngIf="classes">
+  <div class="row justify-content-center mt-3">
+    <div class="col col-sm-9 border pb-2 px-4">
+      <h2>כיתות</h2>
+      <div class="form-group form-inline row">
+
+        <label class="col-4">כיתה</label>
+
+        <select class="form-control col-8" [(ngModel)]="selectedClass" name="selectedClass"
+        (ngModelChange)="onClassChange($event)">
+          <option *ngFor="let class of classes" [ngValue]="class">
+            {{class.Grade.Name}}'{{class.Number}}
+          </option>
+        </select>
+      </div>
+      <div class="form-group form-inline row" *ngIf="selectedClass">
+        <label class="col-4">מחנך</label>
+        <select class="form-control col-8" [(ngModel)]="selectedTeacher" name="selectedTeacher">
+          <ng-container *ngFor="let teacher of teachers">
+            <option *ngIf="teacher.TeacherType.Name=='מחנך'" [ngValue]="teacher">
+              {{teacher.FirstName}} {{teacher.LastName}}
+            </option>
+          </ng-container>
+        </select>
+
+      </div>
+    </div>
+  </div>
+</form>

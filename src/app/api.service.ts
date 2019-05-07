@@ -40,6 +40,12 @@ export class ApiService {
         return this.http.post(environment.api + "ClassScheduleTable/", JSON.stringify(schedule), { headers });
     }
 
+    saveTeacherClassAccesses(teacherClassAccess) {
+        const headers = new HttpHeaders({ 'Content-Type': 'application/json; charset=utf-8' });
+        return this.http.post(environment.api + "TeacherClassAccess/", JSON.stringify(teacherClassAccess), { headers });
+    }
+
+
     addModel(model, modelName) {
         const headers = new HttpHeaders({ 'Content-Type': 'application/json; charset=utf-8' });
         return this.http.post(environment.api + modelName + "/", JSON.stringify(model), { headers });
