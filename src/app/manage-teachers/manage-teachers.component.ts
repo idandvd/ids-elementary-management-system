@@ -11,14 +11,12 @@ export class ManageTeachersComponent implements OnInit {
 
   public classes;
   public teachers;
-  public teacherClassAccess;
   public teacherTypes;
   public users;
 
   public selectedTeacher;
   public selectedTeacherType;
   public selectedTeacherUser;
-  public selectedTeacherClassAccesses;
 
   public newTeacher: { [key: string]: any } = {};
   public newTeacherType;
@@ -29,17 +27,16 @@ export class ManageTeachersComponent implements OnInit {
 
   ngOnInit() {
 
+    this.newTeacher.ClassAccess = [];
     this.getClasses();
     this.getTeachers();
-    this.getTeacherClassAccess();
     this.getTeacherTypes();
     this.getUsers();
   }
 
   hasTeacherGotAccessToClass(currentClass) {
-    return this.teacherClassAccess.filter(teacherClassAccess => {
-      return teacherClassAccess.Class.Id === currentClass.Id &&
-        teacherClassAccess.Teacher.Id === this.selectedTeacher.Id;
+    return this.selectedTeacher.ClassAccess.filter(classAccess => {
+      return classAccess.Id === currentClass.Id
     }).length > 0;
   }
 
@@ -50,22 +47,6 @@ export class ManageTeachersComponent implements OnInit {
     this.selectedTeacherUser = this.users.filter(user => {
       return user.Id === selectedTeacher.User.Id;
     })[0];
-
-
-
-    let arr: Array<{ class: any, hasAccess: any }> = [];
-
-    for (let currentClass of this.classes) {
-      arr.push({
-        class: currentClass,
-        hasAccess:
-          (this.teacherClassAccess.filter(teacherClassAccess => {
-            return teacherClassAccess.Class.Id === currentClass.Id &&
-              teacherClassAccess.Teacher.Id === this.selectedTeacher.Id;
-          }).length > 0)
-      });
-    }
-    this.selectedTeacherClassAccesses = arr;
   }
 
   getClasses() {
@@ -79,16 +60,10 @@ export class ManageTeachersComponent implements OnInit {
     this.apiService.getController("Teachers").subscribe(
       (data) => { this.teachers = data; },
       (err) => { console.error("Error loading Teachers"); },
-      () => { console.log("Done loading Teachers"); console.log(this.teachers);}
+      () => { console.log("Done loading Teachers"); console.log(this.teachers); }
     )
   }
-  getTeacherClassAccess() {
-    this.apiService.getController("TeacherClassAccess").subscribe(
-      (data) => { this.teacherClassAccess = data; },
-      (err) => { console.error("Error loading TeacherClassAccess"); },
-      () => { console.log("Done loading ClassesTeachers"); console.log(this.teacherClassAccess); }
-    )
-  }
+
   getTeacherTypes() {
     this.apiService.getController("TeacherTypes").subscribe(
       (data) => { this.teacherTypes = data; },
@@ -104,10 +79,27 @@ export class ManageTeachersComponent implements OnInit {
     )
   }
 
+  classCheckboxOnChange(teacher: any, classAccess: any, isChecked: boolean) {
+    if (isChecked) {
+      teacher.ClassAccess.push(classAccess);
+    }
+    else {
+      let classAccessInList = teacher.ClassAccess.filter(
+        classAccessInListFilter => {
+          return classAccessInListFilter.Id === classAccess.Id;
+        })[0];
+      const index: number = teacher.ClassAccess.indexOf(classAccessInList);
+      if (index !== -1) {
+        teacher.ClassAccess.splice(index, 1);
+      }
+    }
+  }
+
   saveTeacher() {
+
     this.selectedTeacher.TeacherType = this.selectedTeacherType;
     this.selectedTeacher.User = this.selectedTeacherUser;
-    this.apiService.addModel(this.selectedTeacher, "Teachers").subscribe(
+    this.apiService.saveModelWithRoute(this.selectedTeacher, "Teachers", "Save").subscribe(
       () => { },
       () => { this.alertService.error("שגיאה בשמירת נתונים"); },
       () => {
@@ -115,28 +107,22 @@ export class ManageTeachersComponent implements OnInit {
         this.alertService.success("מורה נשמר בהצלחה");
       }
     );
-    let arr: Array<{ class: any, teacher: any }> = [];
-    for(let teacherClassAccess of this.selectedTeacherClassAccesses)
-    {
-      if(teacherClassAccess.hasAccess)
-        arr.push({class:teacherClassAccess.class,teacher:this.selectedTeacher});
-    }
-    this.apiService.saveTeacherClassAccesses(this.selectedTeacherClassAccesses).subscribe(
-      () => { },
-      () => this.alertService.error("שגיאה בשמירת נתונים"),
-      () => this.alertService.success("גישה נשמר בהצלחה")
-    )
 
   }
   addTeacher() {
     this.newTeacher.TeacherType = this.newTeacherType;
     this.newTeacher.User = this.newTeacherUser;
-    this.apiService.addModel(this.newTeacher, "Teachers").subscribe(
+    this.apiService.saveModelWithRoute(this.newTeacher, "Teachers", "Save").subscribe(
       () => { },
       () => { this.alertService.error("שגיאה בשמירת נתונים"); },
       () => {
-        this.getTeachers();
+        this.teachers = null;
+        this.newTeacherType = null;
+        this.newTeacherUser = null;
+        this.newTeacher = {}
+        this.newTeacher.ClassAccess = [];
         this.selectedTeacher = null;
+        this.getTeachers();
         this.alertService.success("מורה נשמר בהצלחה");
       }
     );

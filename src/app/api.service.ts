@@ -52,6 +52,12 @@ export class ApiService {
 
     }
 
+    saveModelWithRoute(model, modelName,route) {
+        const headers = new HttpHeaders({ 'Content-Type': 'application/json; charset=utf-8' });
+        return this.http.post(environment.api + modelName + "/" + route, JSON.stringify(model), { headers });
+
+    }
+
     addTeacherType(teacherTypeName) {
         const headers = new HttpHeaders({ 'Content-Type': 'application/json; charset=utf-8' });
         return this.http.post(environment.api + "TeacherTypes/", "{\"name\":\"" + teacherTypeName + "\"}", { headers });
