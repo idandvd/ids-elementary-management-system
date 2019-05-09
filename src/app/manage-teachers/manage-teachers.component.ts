@@ -9,6 +9,8 @@ import { AlertService } from '../_services';
 })
 export class ManageTeachersComponent implements OnInit {
 
+  file: File;
+
   public classes;
   public teachers;
   public teacherTypes;
@@ -58,7 +60,9 @@ export class ManageTeachersComponent implements OnInit {
   }
   getTeachers() {
     this.apiService.getController("Teachers").subscribe(
-      (data) => { this.teachers = data; },
+      (data) => { this.teachers = data;
+                  this.teachers.sort((a,b) => a.LastName.localeCompare(b.LastName));
+                  this.teachers.sort((a,b) => a.FirstName.localeCompare(b.FirstName));},
       (err) => { console.error("Error loading Teachers"); },
       () => { console.log("Done loading Teachers"); console.log(this.teachers); }
     )
@@ -129,5 +133,22 @@ export class ManageTeachersComponent implements OnInit {
 
 
   }
+
+  incomingfile(event) {
+    this.file = event.target.files[0];
+  }
+
+  Upload(files) {
+    let fileToUpload = <File>this.file;
+    const formData = new FormData();
+    formData.append('file', fileToUpload, fileToUpload.name);
+    this.apiService.uploadFile(formData,"Teachers").subscribe(
+      data => { console.log(data) },
+      err => { },
+      () => { this.alertService.success("מורים נוספו בהצלחה");
+              this.getTeachers(); }
+    );
+  }
+
 }
 

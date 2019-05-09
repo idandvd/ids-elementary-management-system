@@ -149,7 +149,7 @@ export class AddStudentFormComponent implements OnInit {
     let fileToUpload = <File>this.file;
     const formData = new FormData();
     formData.append('file', fileToUpload, fileToUpload.name);
-    this.apiService.uploadFile(formData).subscribe(
+    this.apiService.uploadFile(formData,"Students").subscribe(
       data => { console.log(data) },
       err => { },
       () => { this.alertService.success("תלמידים נוספו בהצלחה"); }

@@ -2,8 +2,8 @@ drop TABLE IF EXISTS tables_information;
 drop TABLE IF EXISTS sent_sms;
 drop TABLE IF EXISTS received_sms;
 drop TABLE IF EXISTS lessons_evaluations;
-drop TABLE IF EXISTS students_schedule;
-drop TABLE IF EXISTS classes_schedule;
+drop TABLE IF EXISTS students_schedules;
+drop TABLE IF EXISTS classes_schedules;
 drop TABLE IF EXISTS lessons_grades;
 drop TABLE IF EXISTS lessons;
 drop TABLE IF EXISTS lesson_types;
@@ -97,6 +97,7 @@ CREATE TABLE teachers (
     id INT(11) NOT NULL AUTO_INCREMENT,
 	first_name NVARCHAR(50) DEFAULT NULL,
 	last_name NVARCHAR(50) DEFAULT NULL,
+    cellphone NVARCHAR(50) DEFAULT NULL,
     teacher_type_id INT(11) NOT NULL,
 	user_id INT(11) NOT NULL,
     year_id INT(11) NOT NULL,
@@ -135,6 +136,7 @@ CREATE TABLE teacher_class_access (
     class_id INT(11) NOT NULL,
 	PRIMARY KEY(id),
     UNIQUE KEY id_UNIQUE (id),
+    UNIQUE KEY teacher_class_access_UNIQUE (teacher_id,class_id),
     CONSTRAINT teacher_class_access_teacher_id FOREIGN KEY (teacher_id)
         REFERENCES teachers(id)
         ON DELETE NO ACTION ON UPDATE NO ACTION,
@@ -228,7 +230,7 @@ CREATE TABLE lessons_grades (
 )ENGINE=INNODB AUTO_INCREMENT=1 DEFAULT CHARSET=UTF8;
     
     
-CREATE TABLE classes_schedule (
+CREATE TABLE classes_schedules (
     id INT(11) NOT NULL AUTO_INCREMENT,
     day_id INT(11) NOT NULL,
 	hour_id INT(11) NOT NULL,
@@ -250,7 +252,7 @@ CREATE TABLE classes_schedule (
         ON DELETE NO ACTION ON UPDATE NO ACTION
 )ENGINE=INNODB AUTO_INCREMENT=1 DEFAULT CHARSET=UTF8;
 
-CREATE TABLE students_schedule (
+CREATE TABLE students_schedules (
     id INT(11) NOT NULL AUTO_INCREMENT,
     day_id INT(11) NOT NULL,
 	hour_id INT(11) NOT NULL,
@@ -281,7 +283,7 @@ CREATE TABLE sent_sms (
 	PRIMARY KEY(id),
 	UNIQUE KEY id_UNIQUE (id),
     CONSTRAINT sent_sms_students_schedule_id FOREIGN KEY (students_schedule_id)
-        REFERENCES students_schedule(id)
+        REFERENCES students_schedules(id)
         ON DELETE NO ACTION ON UPDATE NO ACTION,
 	CONSTRAINT sent_sms_parent_id FOREIGN KEY (parent_id)
         REFERENCES parents(id)
@@ -296,7 +298,7 @@ CREATE TABLE received_sms (
 	PRIMARY KEY(id),
 	UNIQUE KEY id_UNIQUE (id),
     CONSTRAINT received_sms_students_schedule_id FOREIGN KEY (students_schedule_id)
-        REFERENCES students_schedule(id)
+        REFERENCES students_schedules(id)
         ON DELETE NO ACTION ON UPDATE NO ACTION,
 	CONSTRAINT received_sms_parent_id FOREIGN KEY (parent_id)
         REFERENCES parents(id)
@@ -340,10 +342,21 @@ CREATE TABLE preferences (
 
 
 
+LOCK TABLES `user_types` WRITE;
+/*!40000 ALTER TABLE `user_types` DISABLE KEYS */;
+INSERT INTO `user_types` VALUES (1,'admin',1),(2,'user',2);
+/*!40000 ALTER TABLE `user_types` ENABLE KEYS */;
+UNLOCK TABLES;
+
+LOCK TABLES `users` WRITE;
+/*!40000 ALTER TABLE `users` DISABLE KEYS */;
+INSERT INTO `users` VALUES (1,'idanda','idanda',1);
+/*!40000 ALTER TABLE `users` ENABLE KEYS */;
+UNLOCK TABLES;
 
 LOCK TABLES `preferences` WRITE;
 /*!40000 ALTER TABLE `preferences` DISABLE KEYS */;
-INSERT INTO `preferences` VALUES (1,'current_year_id','1');
+INSERT INTO `preferences` VALUES (1,'current_year_id','1'),(2,'current_new_user_number','1');
 /*!40000 ALTER TABLE `preferences` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -372,12 +385,8 @@ INSERT INTO `hours_in_day` VALUES (1,1,'08:10:00','08:50:00','\0',1),(2,2,'08:50
 UNLOCK TABLES;
 
 
-LOCK TABLES `teacher_types` WRITE;
-/*!40000 ALTER TABLE `teacher_types` DISABLE KEYS */;
-INSERT INTO `teacher_types` VALUES (1,'מורה משלב'),(4,'מורה מקצועי'),(2,'מחנך'),(5,'מנהל'),(3,'רכז');
-/*!40000 ALTER TABLE `teacher_types` ENABLE KEYS */;
-UNLOCK TABLES;
 
-insert into classes(grade_id,number,year_id) values(1,2,1);
-insert into students(first_name,last_name,class_id,year_id) values('עידן','דוד',1,1);
+
+#insert into classes(grade_id,number,year_id) values(1,2,1);
+#insert into students(first_name,last_name,class_id,year_id) values('עידן','דוד',1,1);
 

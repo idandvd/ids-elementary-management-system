@@ -19,18 +19,21 @@
           <div class="row">
             <label class="col-4">פרטים</label>
 
-            <div class="col-8 border">
+            <div class="col-8">
               <div class="form-group form-inline row mb-2 mr-1 ">
                 <label class="col-4">שם פרטי</label>
-
                 <input id="FirstName" required [(ngModel)]="selectedTeacher.FirstName" name="FirstName" type="text"
                   class="form-control col-8" placeholder="שם פרטי">
               </div>
               <div class="form-group form-inline row mb-2 mr-1 ">
                 <label class="col-4">שם משפחה</label>
-
                 <input id="LastName" required [(ngModel)]="selectedTeacher.LastName" name="LastName" type="text"
                   class="form-control col-8" placeholder="שם משפחה">
+              </div>
+              <div class="form-group form-inline row mb-2 mr-1 ">
+                <label class="col-4">טלפון נייד</label>
+                <input id="Cellphone" required [(ngModel)]="selectedTeacher.Cellphone" name="Cellphone" type="text"
+                  class="form-control col-8" placeholder="טלפון נייד">
               </div>
               <div class="form-group form-inline row mb-2 mr-1 ">
                 <label class="col-4">סוג מורה</label>
@@ -56,7 +59,14 @@
 
             </div>
           </div>
+          <div class="rowjustify-content-center">
+              <div class="col">
+                  <h4>גישה לכיתות:</h4>
+
+              </div>
+          </div>
           <div class="row">
+
             <div class="col-2" *ngFor="let class of classes">
               <input type="checkbox" [checked]="hasTeacherGotAccessToClass(class)"
                 (change)="classCheckboxOnChange(selectedTeacher,class,$event.target.checked)">
@@ -135,3 +145,13 @@
     </div>
   </div>
 </form>
+<div class="row justify-content-center mt-3 ">
+  <div class="col col-sm-9 border pb-2 px-4">
+
+    <h2>ייבוא נתונים מאקסל</h2>
+
+    <input type="file" style="display: inline-block;" (change)="incomingfile($event)" placeholder="Upload file"
+      accept=".xlsx">
+    <button type="button" class="btn btn-info" (click)="Upload()">יבא נתונים</button>
+  </div>
+</div>

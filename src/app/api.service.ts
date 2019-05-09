@@ -64,9 +64,9 @@ export class ApiService {
 
     }
 
-    uploadFile(formData) {
+    uploadFile(formData,modelName) {
         const headers = new HttpHeaders({ 'Content-Type': 'application/json; charset=utf-8' });
-        return this.http.post(environment.api + "Students/Import", formData)
+        return this.http.post(environment.api + modelName+ "/Import", formData)
 
     }
 }
