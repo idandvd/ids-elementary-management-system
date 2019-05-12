@@ -27,7 +27,8 @@ import { AddLessonFormComponent } from './add-lesson-form/add-lesson-form.compon
 import { AddStudentFormComponent } from './add-student-form/add-student-form.component';
 import { EditStudentFormComponent } from './edit-student-form/edit-student-form.component';
 import { ManageClassesComponent } from './manage-classes/manage-classes.component';
-import { ManageTeachersComponent } from './manage-teachers/manage-teachers.component'; 
+import { ManageTeachersComponent } from './manage-teachers/manage-teachers.component';
+import { ManageLessonsComponent } from './manage-lessons/manage-lessons.component'; 
 
 
 
@@ -44,6 +45,7 @@ import { ManageTeachersComponent } from './manage-teachers/manage-teachers.compo
     AlertComponent,
     ManageClassesComponent,
     ManageTeachersComponent,
+    ManageLessonsComponent,
   ],
   imports: [
     BrowserModule,

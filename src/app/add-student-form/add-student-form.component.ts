@@ -98,7 +98,7 @@ export class AddStudentFormComponent implements OnInit {
     this.newStudent.Father = this.getNewFather();
     this.apiService.addModel(this.newStudent, "Students").subscribe(
       data => { },
-      err => { console.error("Parents err"); this.changeErrorMessage(); },
+      err => { console.error("Students err"); this.changeErrorMessage(); },
       () => { this.changeSuccessMessage(); }
     );
   }

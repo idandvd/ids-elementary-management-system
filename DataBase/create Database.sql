@@ -385,7 +385,11 @@ INSERT INTO `hours_in_day` VALUES (1,1,'08:10:00','08:50:00','\0',1),(2,2,'08:50
 UNLOCK TABLES;
 
 
-
+LOCK TABLES `lesson_types` WRITE;
+/*!40000 ALTER TABLE `lesson_types` DISABLE KEYS */;
+INSERT INTO `lesson_types` VALUES (2,'קבוצה'),(1,'שיעור');
+/*!40000 ALTER TABLE `lesson_types` ENABLE KEYS */;
+UNLOCK TABLES;
 
 #insert into classes(grade_id,number,year_id) values(1,2,1);
 #insert into students(first_name,last_name,class_id,year_id) values('עידן','דוד',1,1);

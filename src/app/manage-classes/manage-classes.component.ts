@@ -31,8 +31,8 @@ export class ManageClassesComponent implements OnInit {
     this.selectedEducator = this.teachers.filter(teacher => {
       //console.log(teacher);
       return teacher.Id === this.teacherClassAccess.filter(teacherClassAccess => {
-        
-        return teacherClassAccess.Class.Id = selectedClass.Id && teacherClassAccess.Teacher.TeacherType == "מחנך"
+
+        return teacherClassAccess.Class.Id = selectedClass.Id && (teacherClassAccess.Teacher.TeacherType == "מחנך" || teacherClassAccess.Teacher.TeacherType == "מחנכת")
       })
     })[0];
   }

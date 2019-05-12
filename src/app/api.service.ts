@@ -23,6 +23,8 @@ export class ApiService {
         return x;
     }
 
+
+
     getControllerById(controllerName, id) {
         var x = this.http.get(environment.api + controllerName + "/" + id);
         return x;
@@ -52,7 +54,7 @@ export class ApiService {
 
     }
 
-    saveModelWithRoute(model, modelName,route) {
+    saveModelWithRoute(model, modelName, route) {
         const headers = new HttpHeaders({ 'Content-Type': 'application/json; charset=utf-8' });
         return this.http.post(environment.api + modelName + "/" + route, JSON.stringify(model), { headers });
 
@@ -64,9 +66,9 @@ export class ApiService {
 
     }
 
-    uploadFile(formData,modelName) {
+    uploadFile(formData, modelName) {
         const headers = new HttpHeaders({ 'Content-Type': 'application/json; charset=utf-8' });
-        return this.http.post(environment.api + modelName+ "/Import", formData)
+        return this.http.post(environment.api + modelName + "/Import", formData)
 
     }
 }

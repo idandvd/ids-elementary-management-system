@@ -1,0 +1,162 @@
+<div class="row justify-content-center mt-3 ">
+  <div class="col col-sm-9 border pb-2 px-4">
+    <h2>שיעורים</h2>
+  </div>
+</div>
+<div class="row justify-content-center mt-3 " *ngIf="!(teachers && lessonTypes)">
+  <div class="col col-sm-9 border pb-2 px-4">
+    <h2>טוען נתונים</h2>
+  </div>
+</div>
+
+
+<div class="row justify-content-center mt-3 " *ngIf="lessons && teachers && lessonTypes">
+  <div class="col col-sm-9 border pb-2 px-4">
+    <h2>עריכת שיעור</h2>
+    <form (ngSubmit)="saveLesson()">
+
+      <div class="form-group form-inline row">
+        <label class="col-4" for="Lesson">שיעור</label>
+        <select class="form-control col-8" [(ngModel)]="selectedLesson" name="selectedLesson"
+          (ngModelChange)="onLessonChange($event)">
+          <ng-container *ngFor="let lesson of lessons">
+            <option [ngValue]="lesson">
+              {{lesson.Name}}
+            </option>
+          </ng-container>
+        </select>
+      </div>
+      <div class="" *ngIf="selectedLesson">
+
+        <div class="form-group form-inline row">
+          <label class="col-4" for="LessonName">שם שיעור</label>
+          <input id="selectedLessonName" required [(ngModel)]="selectedLesson.Name" name="LessonName" type="text"
+            class="form-control col-8" placeholder="שם שיעור">
+        </div>
+
+
+        <div class="form-group form-inline row">
+          <label class="col-4">מורה</label>
+          <select class="form-control col-8" [(ngModel)]="selectedLessonTeacher" name="selectedLessonTeacher">
+            <option *ngFor="let teacher of teachers" [ngValue]="teacher">
+              {{teacher.FirstName}} {{teacher.LastName}}
+            </option>
+          </select>
+        </div>
+        <div class="form-group row">
+          <label class="col-4">שם סוג שיעור</label>
+          <select class="form-control col-8" [(ngModel)]="selectedLessonLessonType" name="selectedLessonLessonType">
+            <option *ngFor="let lessonType of lessonTypes" [ngValue]="lessonType">
+              {{lessonType.Name}}
+            </option>
+          </select>
+        </div>
+        <div class="form-group form-inline row">
+          <label class="col-4" for="selectedLessonDescription">תיאור השיעור</label>
+          <input id="selectedLessonDescription" required [(ngModel)]="selectedLesson.Description"
+            name="LessonDescription" type="text" class="form-control col-8" placeholder="תיאור השיעור">
+        </div>
+
+        <div class="form-group form-inline row">
+          <label class="col-4" for="hasEvaluation">האם זה שיעור עם הערכה?</label>
+          <label class="">
+            <input required [(ngModel)]="selectedLesson.HasEvaluation" name="hasEvaluation" [value]="true" type="radio"
+              class="form-control col-1 m-2">כן
+            <input required [(ngModel)]="selectedLesson.HasEvaluation" name="hasEvaluation" [value]="false" type="radio"
+              class="form-control col-1 m-2">לא
+          </label>
+        </div>
+        <div class="form-group form-inline row">
+          <label class="col-4" for="hasGrade">האם זה שיעור עם ציון?</label>
+          <label class="">
+            <input required [(ngModel)]="selectedLesson.HasGrade" name="hasGrade" [value]="true" type="radio"
+              class="form-control col-1 m-2">כן
+            <input required [(ngModel)]="selectedLesson.HasGrade" name="hasGrade" [value]="false" type="radio"
+              class="form-control col-1 m-2">לא
+          </label>
+
+        </div>
+        <div class="form-group row">
+          <div class="col text-center">
+            <button class="btn btn-outline-dark">שמור שיעור</button>
+          </div>
+        </div>
+      </div>
+    </form>
+
+  </div>
+</div>
+
+
+<div class="row justify-content-center mt-3 " *ngIf="teachers && lessonTypes">
+  <div class="col col-sm-9 border pb-2 px-4">
+    <h2>הוספת שיעור</h2>
+    <form (ngSubmit)="addLesson()">
+
+      <div class="form-group form-inline row">
+        <label class="col-4" for="LessonName">שם שיעור</label>
+        <input id="LessonName" required [(ngModel)]="newLesson.Name" name="LessonName" type="text"
+          class="form-control col-8" placeholder="שם שיעור">
+      </div>
+
+
+      <div class="form-group form-inline row">
+        <label class="col-4">מורה</label>
+        <select class="form-control col-8" [(ngModel)]="newLessonTeacher" name="newLessonTeacher">
+          <option *ngFor="let teacher of teachers" [ngValue]="teacher">
+            {{teacher.FirstName}} {{teacher.LastName}}
+          </option>
+        </select>
+      </div>
+      <div class="form-group row">
+        <label class="col-4">שם סוג שיעור</label>
+        <select class="form-control col-8" [(ngModel)]="newLessonLessonType" name="newLessonLessonType">
+          <option *ngFor="let lessonType of lessonTypes" [ngValue]="lessonType">
+            {{lessonType.Name}}
+          </option>
+        </select>
+      </div>
+      <div class="form-group form-inline row">
+        <label class="col-4" for="newLessonDescription">תיאור השיעור</label>
+        <input id="newLessonDescription" required [(ngModel)]="newLesson.Description" name="LessonDescription"
+          type="text" class="form-control col-8" placeholder="תיאור השיעור">
+      </div>
+
+      <div class="form-group form-inline row">
+        <label class="col-4" for="hasEvaluation">האם זה שיעור עם הערכה?</label>
+        <label class="">
+          <input required [(ngModel)]="newLesson.HasEvaluation" name="hasEvaluation" [value]="true" type="radio"
+            class="form-control col-1 m-2">כן
+          <input required [(ngModel)]="newLesson.HasEvaluation" name="hasEvaluation" [value]="false" type="radio"
+            class="form-control col-1 m-2">לא
+        </label>
+      </div>
+      <div class="form-group form-inline row">
+        <label class="col-4" for="hasGrade">האם זה שיעור עם ציון?</label>
+        <label class="">
+          <input id="hasGrade" required [(ngModel)]="newLesson.HasGrade" name="hasGrade" [value]="true" type="radio"
+            class="form-control col-1 m-2">כן
+          <input id="hasNoGrade" required [(ngModel)]="newLesson.HasGrade" name="hasGrade" [value]="false" type="radio"
+            class="form-control col-1 m-2">לא
+        </label>
+
+      </div>
+      <div class="form-group row">
+        <div class="col text-center">
+          <button class="btn btn-outline-dark">הוסף שיעור</button>
+        </div>
+      </div>
+    </form>
+
+  </div>
+</div>
+<div class="row justify-content-center mt-3 ">
+  <div class="col col-sm-9 border pb-2 px-4">
+
+    <h2>ייבוא נתונים מאקסל</h2>
+
+    <input type="file" style="display: inline-block;" (change)="incomingfile($event)" placeholder="Upload file"
+      accept=".xlsx">
+    <button type="button" class="btn btn-info" (click)="Upload()">יבא נתונים</button>
+  </div>
+</div>

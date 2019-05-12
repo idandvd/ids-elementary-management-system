@@ -1,9 +1,19 @@
-<form (ngSubmit)="saveTeacher()" *ngIf="teachers">
-  <div class="row justify-content-center mt-3">
-    <div class="col col-sm-9 border pb-2 px-4">
-      <h2>מורים</h2>
+<div class="row justify-content-center mt-3">
+  <div class="col col-sm-9 border pb-2 px-4">
+    <h2>מורים</h2>
+  </div>
+</div>
+<div class="row justify-content-center mt-3" *ngIf="!(teachers && teacherTypes && users && classes) ">
+  <div class="col col-sm-9 border pb-2 px-4">
+    <h2>טוען נתונים</h2>
+  </div>
+</div>
+<div class="row justify-content-center mt-3" *ngIf="teachers && teacherTypes && users && classes">
+  <div class="col col-sm-9 border pb-2 px-4">
+    <h2>עריכת מורה</h2>
+    <form (ngSubmit)="saveTeacher()">
       <div class="form-group form-inline row">
-        <label class="col-4" for="Teacher">מחנך</label>
+        <label class="col-4" for="Teacher">מורה</label>
         <select class="form-control col-8" [(ngModel)]="selectedTeacher" name="selectedTeacher"
           (ngModelChange)="onTeacherChange($event)">
           <ng-container *ngFor="let teacher of teachers">
@@ -13,104 +23,26 @@
           </ng-container>
         </select>
       </div>
-
-      <div class="row" *ngIf="selectedTeacher">
-        <div class="col">
-          <div class="row">
-            <label class="col-4">פרטים</label>
-
-            <div class="col-8">
-              <div class="form-group form-inline row mb-2 mr-1 ">
-                <label class="col-4">שם פרטי</label>
-                <input id="FirstName" required [(ngModel)]="selectedTeacher.FirstName" name="FirstName" type="text"
-                  class="form-control col-8" placeholder="שם פרטי">
-              </div>
-              <div class="form-group form-inline row mb-2 mr-1 ">
-                <label class="col-4">שם משפחה</label>
-                <input id="LastName" required [(ngModel)]="selectedTeacher.LastName" name="LastName" type="text"
-                  class="form-control col-8" placeholder="שם משפחה">
-              </div>
-              <div class="form-group form-inline row mb-2 mr-1 ">
-                <label class="col-4">טלפון נייד</label>
-                <input id="Cellphone" required [(ngModel)]="selectedTeacher.Cellphone" name="Cellphone" type="text"
-                  class="form-control col-8" placeholder="טלפון נייד">
-              </div>
-              <div class="form-group form-inline row mb-2 mr-1 ">
-                <label class="col-4">סוג מורה</label>
-                <select class="form-control col-8" [(ngModel)]="selectedTeacherType" name="selectedTeacherType">
-                  <ng-container *ngFor="let teacherType of teacherTypes">
-                    <option [ngValue]="teacherType">
-                      {{teacherType.Name}}
-                    </option>
-                  </ng-container>
-                </select>
-              </div>
-              <div class="form-group form-inline row mb-2 mr-1 ">
-                <label class="col-4">משתמש</label>
-                <select class="form-control col-8" [(ngModel)]="selectedTeacherUser" name="selectedTeacherUser">
-                  <ng-container *ngFor="let user of users">
-                    <option [ngValue]="user">
-                      {{user.Username}}
-                    </option>
-                  </ng-container>
-                </select>
-              </div>
-
-
-            </div>
-          </div>
-          <div class="rowjustify-content-center">
-              <div class="col">
-                  <h4>גישה לכיתות:</h4>
-
-              </div>
-          </div>
-          <div class="row">
-
-            <div class="col-2" *ngFor="let class of classes">
-              <input type="checkbox" [checked]="hasTeacherGotAccessToClass(class)"
-                (change)="classCheckboxOnChange(selectedTeacher,class,$event.target.checked)">
-                {{class.Grade.Name}}'{{class.Number}}
-            </div>
-          </div>
-          <div class="form-group row justify-content-center mt-3">
-            <div class="col text-center">
-              <button type="submit" class="btn btn-outline-dark">שמור מורה</button>
-            </div>
-          </div>
-
-
-
-        </div>
-      </div>
-    </div>
-  </div>
-</form>
-
-<form (ngSubmit)="addTeacher()">
-  <div class="row justify-content-center mt-3">
-    <div class="col col-sm-9 border pb-2 px-4">
-      <h2>מורים</h2>
-
-      <div class="row">
-        <label class="col-4">הוספת מורה</label>
-
-        <div class="col-8">
+      <div class="" *ngIf="selectedTeacher">
+        <div class="">
           <div class="form-group form-inline row mb-2 mr-1 ">
             <label class="col-4">שם פרטי</label>
-
-            <input id="FirstName" required [(ngModel)]="newTeacher.FirstName" name="FirstName" type="text"
+            <input id="FirstName" required [(ngModel)]="selectedTeacher.FirstName" name="FirstName" type="text"
               class="form-control col-8" placeholder="שם פרטי">
           </div>
           <div class="form-group form-inline row mb-2 mr-1 ">
             <label class="col-4">שם משפחה</label>
-
-            <input id="LastName" required [(ngModel)]="newTeacher.LastName" name="LastName" type="text"
+            <input id="LastName" required [(ngModel)]="selectedTeacher.LastName" name="LastName" type="text"
               class="form-control col-8" placeholder="שם משפחה">
           </div>
           <div class="form-group form-inline row mb-2 mr-1 ">
+            <label class="col-4">טלפון נייד</label>
+            <input id="Cellphone" required [(ngModel)]="selectedTeacher.Cellphone" name="Cellphone" type="text"
+              class="form-control col-8" placeholder="טלפון נייד">
+          </div>
+          <div class="form-group form-inline row mb-2 mr-1 ">
             <label class="col-4">סוג מורה</label>
-            <select class="form-control col-8" [(ngModel)]="newTeacherType" name="newTeacherType">
+            <select class="form-control col-8" [(ngModel)]="selectedTeacherType" name="selectedTeacherType">
               <ng-container *ngFor="let teacherType of teacherTypes">
                 <option [ngValue]="teacherType">
                   {{teacherType.Name}}
@@ -120,7 +52,7 @@
           </div>
           <div class="form-group form-inline row mb-2 mr-1 ">
             <label class="col-4">משתמש</label>
-            <select class="form-control col-8" [(ngModel)]="newTeacherUser" name="newTeacherUser">
+            <select class="form-control col-8" [(ngModel)]="selectedTeacherUser" name="selectedTeacherUser">
               <ng-container *ngFor="let user of users">
                 <option [ngValue]="user">
                   {{user.Username}}
@@ -128,23 +60,88 @@
               </ng-container>
             </select>
           </div>
-          <div class="row">
-            <div class="col-2" *ngFor="let class of classes">
-              <input type="checkbox" 
-                (change)="classCheckboxOnChange(newTeacher,class,$event.target.checked)">
-                {{class.Grade.Name}}'{{class.Number}}
+
+          <div class="row justify-content-center">
+            <div class="col">
+              <h4>גישה לכיתות:</h4>
             </div>
           </div>
-          <div class="form-group row">
+          <div class="row">
+            <div class="col-2" *ngFor="let class of classes">
+              <input type="checkbox" [checked]="hasTeacherGotAccessToClass(class)"
+                (change)="classCheckboxOnChange(selectedTeacher,class,$event.target.checked)">
+              {{class.Grade.Name}}'{{class.Number}}
+            </div>
+          </div>
+          <div class="form-group row justify-content-center mt-3">
             <div class="col text-center">
-              <button type="submit" class="btn btn-outline-dark">הוספת מורה</button>
+              <button type="submit" class="btn btn-outline-dark">שמור מורה</button>
             </div>
           </div>
         </div>
       </div>
-    </div>
+    </form>
   </div>
-</form>
+</div>
+
+<div class="row justify-content-center mt-3" *ngIf="teacherTypes && users && classes">
+  <div class="col col-sm-9 border pb-2 px-4">
+    <h2>הוספת מורה</h2>
+    <form (ngSubmit)="addTeacher()">
+
+      <div class="form-group form-inline row mb-2 mr-1 ">
+        <label class="col-4">שם פרטי</label>
+
+        <input id="FirstName" required [(ngModel)]="newTeacher.FirstName" name="FirstName" type="text"
+          class="form-control col-8" placeholder="שם פרטי">
+      </div>
+      <div class="form-group form-inline row mb-2 mr-1 ">
+        <label class="col-4">שם משפחה</label>
+
+        <input id="LastName" required [(ngModel)]="newTeacher.LastName" name="LastName" type="text"
+          class="form-control col-8" placeholder="שם משפחה">
+      </div>
+      <div class="form-group form-inline row mb-2 mr-1 ">
+        <label class="col-4">סוג מורה</label>
+        <select class="form-control col-8" [(ngModel)]="newTeacherType" name="newTeacherType">
+          <ng-container *ngFor="let teacherType of teacherTypes">
+            <option [ngValue]="teacherType">
+              {{teacherType.Name}}
+            </option>
+          </ng-container>
+        </select>
+      </div>
+      <div class="form-group form-inline row mb-2 mr-1 ">
+        <label class="col-4">משתמש</label>
+        <select class="form-control col-8" [(ngModel)]="newTeacherUser" name="newTeacherUser">
+          <ng-container *ngFor="let user of users">
+            <option [ngValue]="user">
+              {{user.Username}}
+            </option>
+          </ng-container>
+        </select>
+      </div>
+      <div class="row justify-content-center">
+        <div class="col">
+          <h4>גישה לכיתות:</h4>
+
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-2" *ngFor="let class of classes">
+          <input type="checkbox" (change)="classCheckboxOnChange(newTeacher,class,$event.target.checked)">
+          {{class.Grade.Name}}'{{class.Number}}
+        </div>
+      </div>
+      <div class="form-group row">
+        <div class="col text-center">
+          <button type="submit" class="btn btn-outline-dark">הוספת מורה</button>
+        </div>
+      </div>
+    </form>
+
+  </div>
+</div>
 <div class="row justify-content-center mt-3 ">
   <div class="col col-sm-9 border pb-2 px-4">
 
