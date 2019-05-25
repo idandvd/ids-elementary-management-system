@@ -18,13 +18,15 @@ export class ClassPageComponent implements OnInit {
   public dragableLessons;
   public lists;
   public lessons;
+  public filteredLessons;
+  public FilterString;
   public isInEdit;
   public ctrlPressed = false;
   constructor(private apiService: ApiService,
-              private alertService: AlertService) { }
+    private alertService: AlertService) { }
 
   ngOnInit() {
-    this.classId = 1;
+    this.classId = 2;
     this.isInEdit = false;
     this.getClassSchedule();
     this.editSchedule();
@@ -32,12 +34,18 @@ export class ClassPageComponent implements OnInit {
 
   getClassSchedule() {
     this.apiService.getControllerById("ClassScheduleTable", this.classId).subscribe(
-      data => { this.classScheduleTable = data; this.fillDragableLessons(data); },
+      data => {
+        this.classScheduleTable = data;
+
+        this.fillDragableLessons(data);
+
+      },
       err => console.error(this.classId),
       () => { console.log('done loading ClassScheduleTable'); console.log(this.classScheduleTable); }
     );
 
   }
+
 
   fillDragableLessons(data) {
     this.dragableLessons = {};
@@ -50,9 +58,18 @@ export class ClassPageComponent implements OnInit {
           this.lists.push('cdk-drop-list-' + listsCount);
           this.dragableLessons[day.Id][hour.Id] = [];
 
-          if (data.ClassSchedules['Day' + day.Id + '$Hour' + hour.Id])
+          if (data.ClassSchedules['Day' + day.Id + '$Hour' + hour.Id]) {
             this.dragableLessons[day.Id][hour.Id].push(data.ClassSchedules['Day' + day.Id + '$Hour' + hour.Id]);
 
+
+          }
+          else {
+            this.dragableLessons[day.Id][hour.Id].push(null);
+
+          }
+          this.dragableLessons[day.Id][hour.Id].push(day.Id);
+          this.dragableLessons[day.Id][hour.Id].push(hour.Id);
+          this.hasConflict(this.dragableLessons[day.Id][hour.Id]);
           listsCount += 1;
         }
       }
@@ -67,7 +84,8 @@ export class ClassPageComponent implements OnInit {
 
       for (let hour of this.classScheduleTable.HoursInDay) {
         if (!hour.IsBreak) {
-          if (this.dragableLessons[day.Id][hour.Id].length > 0) {
+          if (this.dragableLessons[day.Id][hour.Id].length > 0 &&
+            this.dragableLessons[day.Id][hour.Id][0]) {
             this.classScheduleTable.ClassSchedules['Day' + day.Id + '$Hour' + hour.Id] =
               this.dragableLessons[day.Id][hour.Id][0];
           }
@@ -81,10 +99,28 @@ export class ClassPageComponent implements OnInit {
     }
   }
 
+  onFilterChange() {
+
+    this.filteredLessons = this.lessons.filter(lesson => {
+      return lesson.Name.includes(this.FilterString) ||
+        lesson.Teacher.FirstName.includes(this.FilterString) ||
+        lesson.Teacher.LastName.includes(this.FilterString) ||
+        (lesson.Teacher.FirstName + " " + lesson.Teacher.LastName).includes(this.FilterString);
+    })
+  }
+
   editSchedule() {
     this.isInEdit = true;
     this.apiService.getController("Lessons").subscribe(
-      data => { this.lessons = data },
+      data => {
+        this.lessons = data;
+        this.lessons = this.lessons.filter(lesson => {
+          return lesson.LessonType.Name === "שיעור";
+        });
+        this.lessons.sort((a, b) => a.Teacher.FirstName.localeCompare(b.Teacher.FirstName));
+        this.lessons.sort((a, b) => a.Name.localeCompare(b.Name));
+        this.filteredLessons = this.lessons;
+      },
       err => console.error(this.classId),
       () => console.log('done loading Lessons')
     );
@@ -121,30 +157,47 @@ export class ClassPageComponent implements OnInit {
     return false;
   }
 
+  hasConflict(classSchedule) {
+    if (classSchedule[0] != null) {
+      return this.apiService.HasConflict(classSchedule[1], classSchedule[2], classSchedule[0].Teacher.Id, this.classId).subscribe(
+        (data) => { classSchedule[0].HasConflict = data; },
+        () => { },
+        () => { });
+    }
+
+    //console.log(teacherId);
+  }
   drop(event: CdkDragDrop<any[]>) {
 
+    let previousData = event.previousContainer.data;
+    let nextData = event.container.data;
     if (this.ctrlPressed || event.previousContainer.id == "lessonsList") {
-      let copy = Object.assign({}, event.previousContainer.data[event.previousIndex])
-      event.container.data.push(copy);
+      let copy = Object.assign({}, previousData[event.previousIndex])
+      nextData[0] = (copy);
+      console.log(nextData);
+
+      this.hasConflict(nextData);
+
       return;
     }
     if (event.container.id == "trashList") {
-      event.previousContainer.data.splice(event.previousIndex)
+      previousData[0] = null;
       return;
     }
     if (event.container.data.length >= 1) {
-      let copy = event.previousContainer.data[event.previousIndex]
-      event.previousContainer.data.splice(event.previousIndex)
-      event.previousContainer.data.push(event.container.data[event.currentIndex])
-      event.container.data.splice(event.currentIndex)
-      event.container.data.push(copy);
+      let temp = previousData[0]
+      previousData[0] = event.container.data[event.currentIndex];
+      nextData[0] = temp;
+      console.log(nextData);
+
+      this.hasConflict(nextData);
       return;
     }
     if (event.previousContainer === event.container) {
-      moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
+      //moveItemInArray(nextData, event.previousIndex, event.currentIndex);
     } else {
-      transferArrayItem(event.previousContainer.data,
-        event.container.data,
+      transferArrayItem(previousData,
+        nextData,
         event.previousIndex,
         event.currentIndex);
     }

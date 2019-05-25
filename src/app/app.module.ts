@@ -1,6 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import { HttpClientModule } from '@angular/common/http';  // replaces previous Http service
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';  // replaces previous Http service
 import { ApiService } from './api.service';   // our custom service, see below
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
@@ -29,6 +29,8 @@ import { EditStudentFormComponent } from './edit-student-form/edit-student-form.
 import { ManageClassesComponent } from './manage-classes/manage-classes.component';
 import { ManageTeachersComponent } from './manage-teachers/manage-teachers.component';
 import { ManageLessonsComponent } from './manage-lessons/manage-lessons.component'; 
+import { JwtInterceptor, ErrorInterceptor } from './_helpers';
+import { TeacherScheduleComponent } from './teacher-schedule/teacher-schedule.component';
 
 
 
@@ -46,6 +48,7 @@ import { ManageLessonsComponent } from './manage-lessons/manage-lessons.componen
     ManageClassesComponent,
     ManageTeachersComponent,
     ManageLessonsComponent,
+    TeacherScheduleComponent,
   ],
   imports: [
     BrowserModule,
@@ -63,7 +66,9 @@ import { ManageLessonsComponent } from './manage-lessons/manage-lessons.componen
     BrowserAnimationsModule,
     // MatAutocompleteModule
   ],
-  providers: [ApiService,AlertService],
+  providers: [ApiService,AlertService,
+    { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
+    { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

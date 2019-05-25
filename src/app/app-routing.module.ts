@@ -1,4 +1,4 @@
-import { NgModule }             from '@angular/core';
+import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { LoginFormComponent } from './login-form/login-form.component';
 import { ShowEntireDataBaseComponent } from './show-entire-data-base/show-entire-data-base.component';
@@ -10,26 +10,31 @@ import { EditStudentFormComponent } from './edit-student-form/edit-student-form.
 import { ManageClassesComponent } from './manage-classes/manage-classes.component';
 import { ManageTeachersComponent } from './manage-teachers/manage-teachers.component';
 import { ManageLessonsComponent } from './manage-lessons/manage-lessons.component';
+import { AuthGuard } from './_guards';
+import { UserType } from './_models';
+import { TeacherScheduleComponent } from './teacher-schedule/teacher-schedule.component';
 
 const routes: Routes = [
-  { path: 'login', component: LoginFormComponent },
+  //{ path: 'login', component: LoginFormComponent },
+  { path: '', component: TeacherScheduleComponent, canActivate: [AuthGuard] },
   { path: 'main', component: ShowEntireDataBaseComponent },
-  { path: 'ClassPage', component: ClassPageComponent },
+  { path: 'ClassPage', component: ClassPageComponent, canActivate: [AuthGuard], data: { userType: [UserType.User,UserType.Admin] } },
   { path: 'AddLesson', component: AddLessonFormComponent },
   { path: 'AddTeacherType', component: AddTeacherTypeFormComponent },
   { path: 'AddStudent', component: AddStudentFormComponent },
   { path: 'EditStudent', component: EditStudentFormComponent },
-  { path: 'ManageClasses', component: ManageClassesComponent },
-  { path: 'ManageTeachers', component: ManageTeachersComponent },
-  { path: 'ManageLessons', component: ManageLessonsComponent },
-  
+  { path: 'ManageClasses', component: ManageClassesComponent, canActivate: [AuthGuard], data: { userType: [UserType.Admin] } },
+  { path: 'ManageTeachers', component: ManageTeachersComponent, canActivate: [AuthGuard], data: { userType: [UserType.Admin] } },
+  { path: 'ManageLessons', component: ManageLessonsComponent, canActivate: [AuthGuard], data: { userType: [UserType.Admin] } },
+  { path: 'TeacherSchedule', component: TeacherScheduleComponent, canActivate: [AuthGuard], data: { userType: [UserType.User] } },
+  { path: '**', redirectTo: '' }
 ];
 
 @NgModule({
-  exports: [ RouterModule ],
-  imports: [ RouterModule.forRoot(routes) ],
+  exports: [RouterModule],
+  imports: [RouterModule.forRoot(routes)],
 })
-export class AppRoutingModule {}
+export class AppRoutingModule { }
 
 
 export const routingComponents = [

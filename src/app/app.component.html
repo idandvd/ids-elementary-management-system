@@ -1,10 +1,10 @@
 <div class="container text-center">
 
-    <app-navigation-bar *ngIf="isLoggedIn"></app-navigation-bar>
+    <app-navigation-bar *ngIf="currentTeacher" (loggedOutEvent)="receiveLoggedOut($event)"></app-navigation-bar>
 
-    <app-login-form *ngIf="!isLoggedIn" (loggedInEvent)="receiveLoggedIn($event)"></app-login-form>
+    <app-login-form *ngIf="!currentTeacher" (loggedInEvent)="receiveLoggedIn($event)"></app-login-form>
     <alert></alert>
-    <router-outlet *ngIf="isLoggedIn"  >
+    <router-outlet *ngIf="currentTeacher"  >
     </router-outlet>
-</div>
+</div> 
 <!--<app-login-form></app-login-form>-->

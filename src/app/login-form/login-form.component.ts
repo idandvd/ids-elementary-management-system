@@ -1,6 +1,8 @@
-import { Component, OnInit,Output,EventEmitter } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { ApiService } from '../api.service';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
+import { AuthenticationService } from '../_services';
+import { first } from 'rxjs/operators';
 
 @Component({
   selector: 'app-login-form',
@@ -11,26 +13,43 @@ export class LoginFormComponent implements OnInit {
 
   public username;
   public password;
-  public isLoggedIn:boolean;
+  public isLoggedIn: boolean;
+  returnUrl: string;
 
 
   @Output() loggedInEvent = new EventEmitter<boolean>();
 
   constructor(private apiService: ApiService,
-              private router: Router,) { }
+    private route: ActivatedRoute,
+
+    private router: Router,
+    private authenticationService: AuthenticationService) { }
 
   ngOnInit() {
-    this.isLoggedIn = false;
+    this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
+
   }
 
-  login()
-  {
-    this.apiService.CheckUserExists(this.username,this.password).subscribe(
+  login() {
+    this.authenticationService.login(this.username, this.password)
+      .pipe(first())
+      .subscribe(
+        data => { console.log(this.returnUrl);console.log(data);
+          this.router.navigate([this.returnUrl]); },
+        error => { console.log("wrong login"); },
+        () => { console.log("!!!");
+          this.loggedInEvent.emit(true); }
+
+      );
+
+    return;
+    this.apiService.CheckUserExists(this.username, this.password).subscribe(
       data => { },
-      err =>{console.log("err")},
-      () => {this.loggedInEvent.emit(true);
-             localStorage["loggedIn"] = true;
-              this.router.navigate(["main"]);
+      err => { console.log("err") },
+      () => {
+        this.loggedInEvent.emit(true);
+        localStorage["loggedIn"] = true;
+        this.router.navigate(["main"]);
       }
     );
   }

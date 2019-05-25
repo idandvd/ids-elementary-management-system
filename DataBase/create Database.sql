@@ -103,6 +103,7 @@ CREATE TABLE teachers (
     year_id INT(11) NOT NULL,
 	PRIMARY KEY(id),
     UNIQUE KEY id_UNIQUE (id),
+    UNIQUE KEY user_UNIQUE (user_id,year_id),
 	CONSTRAINT teachers_teacher_type_id FOREIGN KEY (teacher_type_id)
         REFERENCES teacher_types(id)
         ON DELETE NO ACTION ON UPDATE NO ACTION,
@@ -380,7 +381,7 @@ UNLOCK TABLES;
 
 LOCK TABLES `hours_in_day` WRITE;
 /*!40000 ALTER TABLE `hours_in_day` DISABLE KEYS */;
-INSERT INTO `hours_in_day` VALUES (1,1,'08:10:00','08:50:00','\0',1),(2,2,'08:50:00','09:30:00','\0',1),(3,3,'09:30:00','09:45:00','\0',1),(4,4,'09:45:00','10:25:00','\0',1),(5,5,'10:25:00','10:45:00','\0',1),(6,6,'10:45:00','11:30:00','\0',1);
+INSERT INTO `hours_in_day` VALUES (1,1,'08:10:00','08:50:00','\0',1),(2,2,'08:50:00','09:30:00','\0',1),(3,3,'09:30:00','09:45:00',b'1',1),(4,4,'09:45:00','10:25:00','\0',1),(5,5,'10:25:00','10:45:00',b'1',1),(6,6,'10:45:00','11:30:00','\0',1);
 /*!40000 ALTER TABLE `hours_in_day` ENABLE KEYS */;
 UNLOCK TABLES;
 

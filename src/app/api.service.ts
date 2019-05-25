@@ -37,6 +37,11 @@ export class ApiService {
         //                                                            "{\"password\":\""+password+"\"}",{headers});
     }
 
+    HasConflict(day_id, hour_id, teacher_id, class_id) {
+        const headers = new HttpHeaders({ 'Content-Type': ' charset=utf-8' });
+        return this.http.get(environment.api + "ClassScheduleTable/HasConflict/" + day_id + "/" + hour_id + "/" + teacher_id + "/" + class_id, { headers });
+    }
+
     saveClassSchecule(schedule) {
         const headers = new HttpHeaders({ 'Content-Type': 'application/json; charset=utf-8' });
         return this.http.post(environment.api + "ClassScheduleTable/", JSON.stringify(schedule), { headers });
