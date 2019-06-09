@@ -2,34 +2,49 @@
   <div class="container">
     <div class="navbar-nav ml-sm-auto">
       <div class="nav-item  nav-link text-light">
-        שלום {{currentTeacher.FirstName}} {{currentTeacher.User.UserType.Name}}
+        שלום {{currentTeacher.FirstName}} {{currentTeacher.LastName}} {{currentTeacher.User.UserType.Name}}
       </div>
       <a class="nav-item nav-link " id="navTeacherForm" href="/TeacherSchedule">מערכת אישית</a>
-      <div class="dropdown">
+
+
+
+
+      <div class="" *ngIf="classes && classes.length==1">
         <a class="nav-item nav-link dropdown-toggle " data-toggle="dropdown" id="classManageDropDown"
-          aria-haspopup="true" aria-expanded="false" href="#">ניהול כיתה</a>
-        <div class="dropdown-menu dropdown-menu-right text-right"  aria-labelledby="classManageDropDown">
-          <a class="dropdown-item text-left"  href="/ClassPage">מערכת כיתה</a>
-          <a class="dropdown-item text-left" href="/main">תלמידים</a>
-          <a class="dropdown-item text-left" href="/AddStudent">הוספת תלמיד חדש</a>
-          <a class="dropdown-item text-left" href="/EditStudent">עריכת תלמיד</a>
+          aria-haspopup="true" aria-expanded="false" href="#"> ניהול כיתה
+          {{classes[0].Grade.Name}}'{{classes[0].Number}}
+
+        </a>
+        <div class="dropdown-menu dropdown-menu-right text-right" aria-labelledby="classManageDropDown">
+          <a class="dropdown-item text-left" [routerLink]="['/ClassPage/', classes[0].Id]">מערכת כיתה</a>
+          <!-- <a class="dropdown-item text-left" href="/main">תלמידים</a> -->
+          <!-- <a class="dropdown-item text-left" href="/AddStudent">הוספת תלמיד חדש</a> -->
+          <!-- <a class="dropdown-item text-left" href="/EditStudent">עריכת תלמיד</a> -->
+          <a class="dropdown-item text-left" [routerLink]="['/ManageStudents/', classes[0].Id]">ניהול תלמידים</a>
         </div>
       </div>
+      <a *ngIf="classes && classes.length > 1" class="nav-item nav-link " id="navTeacherForm" href="/ClassesPage">ניהול
+        כיתות</a>
+
+
+
+
+
+
       <div class="dropdown" *ngIf="currentTeacher.User.UserType.Name == UserType.Admin">
         <a class="nav-item nav-link dropdown-toggle " data-toggle="dropdown" id="classManageDropDown"
           aria-haspopup="true" aria-expanded="false" href="#">ניהול בית ספר</a>
-        <div class="dropdown-menu dropdown-menu-right text-right"  aria-labelledby="classManageDropDown">
-          <a class="dropdown-item text-left"  href="/ManageClasses">ניהול כיתות</a> 
+        <div class="dropdown-menu dropdown-menu-right text-right">
+          <a class="dropdown-item text-left" href="/ManageClasses">ניהול כיתות</a>
           <a class="dropdown-item text-left" href="/ManageTeachers">ניהול מורים</a>
           <a class="dropdown-item text-left" href="/ManageLessons">ניהול שיעורים</a>
-          <a class="dropdown-item text-left" href="/AddStudent">הוספת תלמיד חדש</a>
-          <a class="dropdown-item text-left" href="/EditStudent">עריכת תלמיד</a>
+          <a class="dropdown-item text-left" [routerLink]="['/ManageStudents/', 0]">ניהול תלמידים</a>
         </div>
       </div>
-      <a class="nav-item nav-link" href="/AddLesson">שיעורים וקבוצות</a>
-      <a class="nav-item nav-link" (click)="logout()">התנתק</a>
+      <!-- <a class="nav-item nav-link" href="/AddLesson">שיעורים וקבוצות</a> -->
+      <a class="nav-item nav-link" href="" (click)="logout()">התנתק</a>
     </div>
     <!-- navbar-nav -->
   </div>
   <!-- container -->
-</nav>  
+</nav>

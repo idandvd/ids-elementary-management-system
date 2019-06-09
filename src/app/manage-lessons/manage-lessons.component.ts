@@ -13,6 +13,8 @@ export class ManageLessonsComponent implements OnInit {
   public lessons;
   public teachers;
   public lessonTypes;
+  public manageType = "addItem";
+
 
   public selectedLesson;
   public selectedLessonTeacher;
@@ -108,11 +110,26 @@ export class ManageLessonsComponent implements OnInit {
     );
   }
 
+  deleteLesson() {
+    if (confirm("מחיקת שיעור תמחק את כל הנתונים הקשורים לאותו שיעור.\n האם את/ה בטוח/ה שברצונך למחוק?")) {
+      this.selectedLesson.Teacher = this.selectedLessonTeacher;
+      this.selectedLesson.LessonType = this.selectedLessonLessonType;
+      this.apiService.deleteModel(this.selectedLesson.Id, "Lessons").subscribe(
+        data => { },
+        err => { this.alertService.error("שגיאה בשמירת נתונים"); },
+        () => {
+          this.selectedLesson = null
+          this.alertService.success("שיעור נמחק בהצלחה");
+        }
+      );
+    }
+  }
+
   incomingfile(event) {
     this.file = event.target.files[0];
   }
 
-  Upload(files) {
+  Upload() {
     let fileToUpload = <File>this.file;
     const formData = new FormData();
     formData.append('file', fileToUpload, fileToUpload.name);

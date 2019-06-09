@@ -1,0 +1,361 @@
+<div class="row justify-content-center mt-3 ">
+  <div class="col col-sm-11 border pb-2 px-4">
+    <h2>תלמידים</h2>
+    <div class="form-group form-inline row justify-content-center">
+      <label class="mx-3">
+        <input id="addItem" required [(ngModel)]="manageType" name="manageType" value="addItem" type="radio"
+          class="form-control col-1 mx-1">הוספה</label>
+      <label class="mx-3">
+        <input id="saveItem" required [(ngModel)]="manageType" name="manageType" value="saveItem" type="radio"
+          class="form-control col-1 mx-1">עריכה</label>
+      <label class="mx-3">
+        <input id="import" required [(ngModel)]="manageType" name="manageType" value="import" type="radio"
+          class="form-control col-1 mx-1">ייבוא</label>
+    </div>
+  </div>
+</div>
+<div class="row justify-content-center mt-3 " *ngIf="!(students && classes && mothers && fathers)">
+  <div class="col col-sm-11 border pb-2 px-4">
+    <h2>טוען נתונים</h2>
+  </div>
+</div>
+
+
+
+
+<form (ngSubmit)="addStudent()" #f="ngForm" *ngIf="manageType=='addItem' && classes && mothers && fathers">
+  <div class="row justify-content-center mt-3 ">
+    <div class="col col-sm-11 border pb-2 px-4">
+      <h2>הוספת תלמיד</h2>
+      <div class="form-group form-inline row">
+        <label class="col-4" for="FirstName">שם פרטי</label>
+        <input id="FirstName" required [(ngModel)]="newStudent.FirstName" name="FirstName" type="text"
+          class="form-control col-8" placeholder="שם פרטי">
+      </div>
+      <div class="form-group form-inline row">
+        <label class="col-4" for="LastName">שם משפחה</label>
+        <input id="LastName" required [(ngModel)]="newStudent.LastName" name="LastName" type="text"
+          class="form-control col-8" placeholder="שם משפחה">
+      </div>
+      <div class="form-group form-inline row">
+        <label class="col-4" for="HomePhone">טלפון בבית</label>
+        <input id="HomePhone" required [(ngModel)]="newStudent.HomePhone" name="HomePhone" type="text"
+          class="form-control col-8" placeholder="טלפון בבית">
+      </div>
+      <div class="form-group form-inline row">
+        <label class="col-4" for="Settlement">יישוב</label>
+        <input id="Settlement" required [(ngModel)]="newStudent.Settlement" name="Settlement" type="text"
+          class="form-control col-8" placeholder="יישוב">
+      </div>
+      <div class="form-group row">
+        <label class="col-4">כיתה</label>
+        <select *ngIf="classId == 0 " class="form-control col-8" [(ngModel)]="newStudent.Class" name="selectedClass">
+          <option *ngFor="let class of classes" [ngValue]="class">
+            {{class.Grade.Name}}'{{class.Number}}
+          </option>
+        </select>
+        <label *ngIf="classId != 0 " class="col-8 text-left"> {{class.Grade.Name}}'{{class.Number}} </label>
+      </div>
+      <div class="form-group form-inline row">
+        <label class="col-4" for="newStudentMotherFromList">אמא</label>
+        <label class="col-8">
+          <div class="row justify-content-end text-left">
+            <input id="newStudentMotherFromList" required [(ngModel)]="newStudentMotherFromList"
+              name="newStudentMotherFromList" [value]="true" type="radio" class="form-control col-1 m-2">מרשימה
+            <input id="newStudentMotherNotFromList" required [(ngModel)]="newStudentMotherFromList"
+              name="newStudentMotherFromList" [value]="false" type="radio" class="form-control col-1 m-2">ידני
+          </div>
+        </label>
+      </div>
+
+      <div class="form-group form-inline row" *ngIf="newStudentMotherFromList">
+        <label class="col-4"></label>
+        <div class="col-8 border pt-2 ">
+          <div class="form-group form-inline row mb-2 mr-1">
+            <label class="col-2">בחר</label>
+            <select class="form-control col-10" [(ngModel)]="newStudent.Mother" name="newStudentSelectedMother">
+              <option *ngFor="let mother of mothers" [ngValue]="mother">
+                {{mother.FirstName}} {{mother.LastName}}
+              </option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group form-inline row" *ngIf="!newStudentMotherFromList">
+        <label class="col-4"> פרטי האם</label>
+        <div class="col-8 border pt-2 ">
+          <div class="form-group form-inline row mb-2 mr-1 ">
+            <label class="col-4" for="MotherFirstName">שם פרטי</label>
+            <input id="MotherFirstName" required [(ngModel)]="newStudent.Mother.FirstName" name="MotherFirstName"
+              type="text" class="form-control col-8" placeholder="שם פרטי">
+          </div>
+          <div class="form-group form-inline row mb-2 mr-1 ">
+            <label class="col-4" for="MotherLastName">שם משפחה</label>
+            <input id="MotherLastName" required [(ngModel)]="newStudent.Mother.LastName" name="MotherLastName"
+              type="text" class="form-control col-8" placeholder="שם משפחה">
+          </div>
+          <div class="form-group form-inline row mb-2 mr-1 ">
+            <label class="col-4" for="MotherCellphone">טלפון</label>
+            <input id="MotherCellphone" required [(ngModel)]="newStudent.Mother.Cellphone" name="MotherCellphone"
+              type="text" class="form-control col-8" placeholder="טלפון">
+          </div>
+          <div class="form-group form-inline row mb-2 mr-1 ">
+            <label class="col-4" for="MotherEmail">אימייל</label>
+            <input id="MotherEmail" required [(ngModel)]="newStudent.Mother.Email" name="MotherEmail" type="text"
+              class="form-control col-8" placeholder="אימייל">
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group form-inline row">
+        <label class="col-4" for="newStudentFatherFromList">אבא</label>
+        <label class="col-8">
+          <div class="row justify-content-end text-left">
+
+            <input id="newStudentFatherFromList" required [(ngModel)]="newStudentFatherFromList"
+              name="newStudentFatherFromList" [value]=true type="radio" class="form-control col-1 m-2">מרשימה
+            <input id="newStudentFatherNotFromList" required [(ngModel)]="newStudentFatherFromList"
+              name="newStudentFatherFromList" [value]=false type="radio" class="form-control col-1 m-2">ידני
+          </div>
+
+        </label>
+      </div>
+
+      <div class="form-group form-inline row" *ngIf="newStudentFatherFromList">
+        <label class="col-4"></label>
+        <div class="col-8 border pt-2 ">
+          <div class="form-group form-inline row mb-2 mr-1">
+            <label class="col-2">בחר</label>
+            <select class="form-control col-10" [(ngModel)]="newStudent.Father" name="newStudentSelectedFather">
+              <option *ngFor="let father of fathers" [ngValue]="father">
+                {{father.FirstName}} {{father.LastName}}
+              </option>
+            </select>
+          </div>
+        </div>
+      </div>
+      <div class="form-group form-inline row" *ngIf="!newStudentFatherFromList">
+        <label class="col-4"> פרטי האב</label>
+        <div class="col-8 border pt-2 ">
+          <div class="form-group form-inline row mb-2 mr-1 ">
+            <label class="col-4" for="FatherFirstName">שם פרטי</label>
+            <input id="FatherFirstName" required [(ngModel)]="newStudent.Father.FirstName" name="FatherFirstName"
+              type="text" class="form-control col-8" placeholder="שם פרטי">
+          </div>
+          <div class="form-group form-inline row mb-2 mr-1 ">
+            <label class="col-4" for="FatherLastName">שם משפחה</label>
+            <input id="FatherLastName" required [(ngModel)]="newStudent.Father.LastName" name="FatherLastName"
+              type="text" class="form-control col-8" placeholder="שם משפחה">
+          </div>
+          <div class="form-group form-inline row mb-2 mr-1 ">
+            <label class="col-4" for="FatherCellphone">טלפון</label>
+            <input id="FatherCellphone" required [(ngModel)]="newStudent.Father.Cellphone" name="FatherCellphone"
+              type="text" class="form-control col-8" placeholder="טלפון">
+          </div>
+          <div class="form-group form-inline row mb-2 mr-1 ">
+            <label class="col-4" for="FatherEmail">אימייל</label>
+            <input id="FatherEmail" required [(ngModel)]="newStudent.Father.Email" name="FatherEmail" type="text"
+              class="form-control col-8" placeholder="אימייל">
+          </div>
+        </div>
+      </div>
+      <div class="form-group row">
+        <div class="col text-center">
+          <button type="submit" class="btn btn-outline-dark">הוסף תלמיד</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</form>
+
+
+
+
+
+<div class="row justify-content-center mt-3 "
+  *ngIf="manageType=='saveItem' && students && classes && mothers && fathers">
+  <div class="col col-sm-11 border pb-2 px-4">
+    <h2>עריכת תלמיד</h2>
+    <form (ngSubmit)="saveStudent()">
+      <div class="form-group form-inline row">
+        <label class="col-4" for="selectedStudent">בחר תלמיד</label>
+        <select class="form-control col-8" [(ngModel)]="selectedStudent" name="selectedStudent"
+          (ngModelChange)="onStudentChange($event)">
+          <ng-container *ngFor="let student of students">
+            <option [ngValue]="student">
+              {{student.FirstName}} {{student.LastName}}
+            </option>
+          </ng-container>
+        </select>
+      </div>
+      <div class="" *ngIf="selectedStudent">
+        <div class="">
+          <div class="form-group form-inline row  ">
+            <label class="col-4">שם פרטי</label>
+            <input id="FirstName" required [(ngModel)]="selectedStudent.FirstName" name="FirstName" type="text"
+              class="form-control col-8" placeholder="שם פרטי">
+          </div>
+          <div class="form-group form-inline row ">
+            <label class="col-4">שם משפחה</label>
+            <input id="LastName" required [(ngModel)]="selectedStudent.LastName" name="LastName" type="text"
+              class="form-control col-8" placeholder="שם משפחה">
+          </div>
+          <div class="form-group form-inline row  ">
+            <label class="col-4">טלפון בבית</label>
+            <input id="HomePhone" required [(ngModel)]="selectedStudent.HomePhone" name="HomePhone" type="text"
+              class="form-control col-8" placeholder="טלפון בבית">
+          </div>
+          <div class="form-group form-inline row">
+            <label class="col-4" for="Settlement">יישוב</label>
+            <input id="Settlement" required [(ngModel)]="selectedStudent.Settlement" name="Settlement" type="text"
+              class="form-control col-8" placeholder="יישוב">
+          </div>
+          <div class="form-group row">
+            <label class="col-4">כיתה</label>
+            <select *ngIf="classId==0" class="form-control col-8" [(ngModel)]="selectedClass" name="selectedClass">
+              <option *ngFor="let class of classes" [ngValue]="class">
+                {{class.Grade.Name}}'{{class.Number}}
+              </option>
+            </select>
+            <label *ngIf="classId!=0" class="col-8 text-left"> {{class.Grade.Name}}'{{class.Number}} </label>
+
+          </div>
+
+          <div class="form-group form-inline row">
+            <label class="col-4" for="MotherFromList">אמא</label>
+            <label class="col-8">
+              <div class="row justify-content-end text-left">
+                <input id="selectedStudentMotherFromList" required [(ngModel)]="selectedStudentMotherFromList"
+                  name="selectedStudentMotherFromList" [value]="true" type="radio" class="form-control col-1 m-2">מרשימה
+                <input id="selectedStudentMotherNotFromList" required [(ngModel)]="selectedStudentMotherFromList"
+                  name="selectedStudentMotherFromList" [value]="false" type="radio" class="form-control col-1 m-2">ידני
+              </div>
+            </label>
+          </div>
+
+          <div class="form-group form-inline row" *ngIf="selectedStudentMotherFromList">
+            <label class="col-4"></label>
+            <div class="col-8 border pt-2 ">
+              <div class="form-group form-inline row mb-2 mr-1">
+                <label class="col-4">בחר</label>
+                <select class="form-control col-8" [(ngModel)]="selectedStudentSelectedMother"
+                  name="selectedStudentSelectedMother">
+                  <option *ngFor="let mother of mothers" [ngValue]="mother">
+                    {{mother.FirstName}} {{mother.LastName}}
+                  </option>
+                </select>
+              </div>
+            </div>
+          </div>
+          <div class="form-group form-inline row" *ngIf="!selectedStudentMotherFromList">
+            <label class="col-4"> פרטי האם</label>
+            <div class="col-8 border pt-2 ">
+              <div class="form-group form-inline row mb-2 mr-1 ">
+                <label class="col-4" for="selectedStudentMotherFirstName">שם פרטי</label>
+                <input id="selectedStudentMotherFirstName" required
+                  [(ngModel)]="selectedStudentSelectedMother.FirstName" name="selectedStudentMotherFirstName"
+                  type="text" class="form-control col-8" placeholder="שם פרטי">
+              </div>
+              <div class="form-group form-inline row mb-2 mr-1 ">
+                <label class="col-4" for="selectedStudentMotherLastName">שם משפחה</label>
+                <input id="selectedStudentMotherLastName" required [(ngModel)]="selectedStudentSelectedMother.LastName"
+                  name="selectedStudentMotherLastName" type="text" class="form-control col-8" placeholder="שם משפחה">
+              </div>
+              <div class="form-group form-inline row mb-2 mr-1 ">
+                <label class="col-4" for="MotherCellphone">טלפון</label>
+                <input id="selectedStudentMotherCellphone" required
+                  [(ngModel)]="selectedStudentSelectedMother.Cellphone" name="selectedStudentMotherCellphone"
+                  type="text" class="form-control col-8" placeholder="טלפון">
+              </div>
+              <div class="form-group form-inline row mb-2 mr-1 ">
+                <label class="col-4" for="MotherEmail">אימייל</label>
+                <input id="selectedStudentMotherEmail" required [(ngModel)]="selectedStudentSelectedMother.Email"
+                  name="selectedStudentMotherEmail" type="text" class="form-control col-8" placeholder="אימייל">
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group form-inline row">
+            <label class="col-4" for="selectedStudentFatherFromList">אבא</label>
+            <label class="col-8">
+              <div class="row justify-content-end text-left">
+
+                <input id="selectedStudentFatherFromList" required [(ngModel)]="selectedStudentFatherFromList"
+                  name="selectedStudentFatherFromList" [value]=true type="radio" class="form-control col-1 m-2">מרשימה
+                <input id="selectedStudentFatherNotFromList" required [(ngModel)]="selectedStudentFatherFromList"
+                  name="selectedStudentFatherFromList" [value]=false type="radio" class="form-control col-1 m-2">ידני
+              </div>
+
+            </label>
+          </div>
+
+
+
+          <div class="form-group form-inline row" *ngIf="selectedStudentFatherFromList">
+            <label class="col-4"></label>
+            <div class="col-8 border pt-2 ">
+              <div class="form-group form-inline row mb-2 mr-1">
+                <label class="col-4">בחר</label>
+                <select class="form-control col-8" [(ngModel)]="selectedStudentSelectedFather"
+                  name="selectedStudentSelectedFather">
+                  <option *ngFor="let father of fathers" [ngValue]="father">
+                    {{father.FirstName}} {{father.LastName}}
+                  </option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group form-inline row" *ngIf="!selectedStudentFatherFromList">
+            <label class="col-4"> פרטי האב</label>
+            <div class="col-8 border pt-2 ">
+              <div class="form-group form-inline row mb-2 mr-1 ">
+                <label class="col-4" for="selectedStudentFatherFirstName">שם פרטי</label>
+                <input id="selectedStudentFatherFirstName" required
+                  [(ngModel)]="selectedStudentSelectedFather.FirstName" name="selectedStudentFatherFirstName"
+                  type="text" class="form-control col-8" placeholder="שם פרטי">
+              </div>
+              <div class="form-group form-inline row mb-2 mr-1 ">
+                <label class="col-4" for="FatherLastName">שם משפחה</label>
+                <input id="selectedStudentFatherLastName" required [(ngModel)]="selectedStudentSelectedFather.LastName"
+                  name="selectedStudentFatherLastName" type="text" class="form-control col-8" placeholder="שם משפחה">
+              </div>
+              <div class="form-group form-inline row mb-2 mr-1 ">
+                <label class="col-4" for="FatherCellphone">טלפון</label>
+                <input id="FatherCellphone" required [(ngModel)]="selectedStudentSelectedFather.Cellphone"
+                  name="selectedStudentFatherCellphone" type="text" class="form-control col-8" placeholder="טלפון">
+              </div>
+              <div class="form-group form-inline row mb-2 mr-1 ">
+                <label class="col-4" for="selectedStudentFatherEmail">אימייל</label>
+                <input id="selectedStudentFatherEmail" required [(ngModel)]="selectedStudentSelectedFather.Email"
+                  name="selectedStudentFatherEmail" type="text" class="form-control col-8" placeholder="אימייל">
+              </div>
+            </div>
+          </div>
+          <div class="form-group row justify-content-center mt-3">
+            <div class="col-2 text-center">
+              <button type="submit" class="btn btn-outline-dark">שמור תלמיד</button>
+            </div>
+            <div class="col-2 text-center">
+              <button type="button" (click)="deleteStudent()" class="btn btn-outline-dark">מחק תלמיד</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+
+</div>
+
+
+<div class="row justify-content-center mt-3 " *ngIf="manageType=='import'">
+  <div class="col col-sm-11 border pb-2 px-4">
+
+    <h2>ייבוא נתונים מאקסל</h2>
+
+    <input type="file" style="display: inline-block;" (change)="incomingfile($event)" placeholder="Upload file"
+      accept=".xlsx">
+    <button type="button" class="btn btn-info" (click)="Upload()">יבא נתונים</button>
+  </div>
+</div>

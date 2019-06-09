@@ -26,15 +26,21 @@ export class ManageClassesComponent implements OnInit {
     this.getTeacherClassAccess();
     this.getTeacherTypes();
   }
-  onClassChange(selectedClass) {
-    console.log(this.teacherClassAccess);
-    this.selectedEducator = this.teachers.filter(teacher => {
-      //console.log(teacher);
-      return teacher.Id === this.teacherClassAccess.filter(teacherClassAccess => {
 
-        return teacherClassAccess.Class.Id = selectedClass.Id && (teacherClassAccess.Teacher.TeacherType == "מחנך" || teacherClassAccess.Teacher.TeacherType == "מחנכת")
-      })
-    })[0];
+  onClassChange(selectedClass) {
+    var possibleEducators = this.teacherClassAccess.filter(teacherClassAccess => {
+      return teacherClassAccess.Class.Id === selectedClass.Id &&
+        (teacherClassAccess.Teacher.TeacherType.Name === "מחנך" ||
+          teacherClassAccess.Teacher.TeacherType.Name === "מחנכת")
+    });
+    if (possibleEducators.length > 0) {
+      this.selectedEducator = this.teachers.filter(teacher => {
+        // console.log(teacher);
+        return teacher.Id === possibleEducators[0].Teacher.Id
+      })[0];
+    }
+    else { this.selectedEducator = null; }
+    console.log(this.selectedEducator);
   }
   getClasses() {
     this.apiService.getController("Classes").subscribe(

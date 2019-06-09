@@ -31,6 +31,8 @@ import { ManageTeachersComponent } from './manage-teachers/manage-teachers.compo
 import { ManageLessonsComponent } from './manage-lessons/manage-lessons.component'; 
 import { JwtInterceptor, ErrorInterceptor } from './_helpers';
 import { TeacherScheduleComponent } from './teacher-schedule/teacher-schedule.component';
+import { ClassesPageComponent } from './classes-page/classes-page.component';
+import { ManageStudentsComponent } from './manage-students/manage-students.component';
 
 
 
@@ -49,6 +51,8 @@ import { TeacherScheduleComponent } from './teacher-schedule/teacher-schedule.co
     ManageTeachersComponent,
     ManageLessonsComponent,
     TeacherScheduleComponent,
+    ClassesPageComponent,
+    ManageStudentsComponent,
   ],
   imports: [
     BrowserModule,

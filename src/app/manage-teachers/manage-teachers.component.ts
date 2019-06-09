@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ApiService } from '../api.service';
-import { AlertService } from '../_services';
+import { AlertService, AuthenticationService } from '../_services';
+import { Teacher } from '../_models';
 
 @Component({
   selector: 'app-manage-teachers',
@@ -8,6 +9,7 @@ import { AlertService } from '../_services';
   styleUrls: ['./manage-teachers.component.css']
 })
 export class ManageTeachersComponent implements OnInit {
+  public currentTeacher: Teacher;
 
   file: File;
 
@@ -15,6 +17,8 @@ export class ManageTeachersComponent implements OnInit {
   public teachers;
   public teacherTypes;
   public users;
+  public manageType = "addItem";
+
 
   public selectedTeacher;
   public selectedTeacherType;
@@ -25,7 +29,12 @@ export class ManageTeachersComponent implements OnInit {
   public newTeacherUser;
 
   constructor(private apiService: ApiService,
-    private alertService: AlertService) { }
+    private authenticationService: AuthenticationService,
+    private alertService: AlertService) {
+      
+    this.authenticationService.currentTeacher.subscribe(x => this.currentTeacher = x);
+
+  }
 
   ngOnInit() {
 
@@ -109,8 +118,11 @@ export class ManageTeachersComponent implements OnInit {
       () => { },
       () => { this.alertService.error("שגיאה בשמירת נתונים"); },
       () => {
+        if (this.currentTeacher.Id == this.selectedTeacher.Id)
+          location.reload();
         this.selectedTeacher = null;
         this.alertService.success("מורה נשמר בהצלחה");
+
       }
     );
 
@@ -122,7 +134,7 @@ export class ManageTeachersComponent implements OnInit {
       () => { },
       () => { this.alertService.error("שגיאה בשמירת נתונים"); },
       () => {
-        this.teachers = null;
+
         this.newTeacherType = null;
         this.newTeacherUser = null;
         this.newTeacher = {}
@@ -135,12 +147,29 @@ export class ManageTeachersComponent implements OnInit {
 
 
   }
+  deleteTeacher() {
+    if (confirm("מחיקת מורה תמחק את כל הנתונים הקשורים לאותו מורה.\n האם את/ה בטוח/ה שברצונך למחוק?")) {
+      this.selectedTeacher.TeacherType = this.selectedTeacherType;
+      this.selectedTeacher.User = this.selectedTeacherUser;
+      this.apiService.deleteModel(this.selectedTeacher.Id, "Teachers").subscribe(
+        () => { },
+        () => { this.alertService.error("שגיאה בשמירת נתונים"); },
+        () => {
+          this.teachers = null;
+          this.selectedTeacher = null;
+          this.getTeachers();
+
+          this.alertService.success("מורה נמחק בהצלחה");
+        }
+      );
+    }
+  }
 
   incomingfile(event) {
     this.file = event.target.files[0];
   }
 
-  Upload(files) {
+  Upload() {
     let fileToUpload = <File>this.file;
     const formData = new FormData();
     formData.append('file', fileToUpload, fileToUpload.name);

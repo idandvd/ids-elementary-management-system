@@ -14,18 +14,21 @@
                     <ng-container *ngIf="!hour.IsBreak">
                         <td *ngFor="let day of classScheduleTable.Days" attr.id="Day{{day.Id}}$Hour{{hour.Id}}"
                             class="h5 text-center"
-                            
+
                             cdkDropList [cdkDropListConnectedTo]="lists"
                             [cdkDropListData]="dragableLessons[day.Id][hour.Id]" (cdkDropListDropped)="drop($event)">
 
                             <div cdkDrag [cdkDragDisabled]="!isInEdit" *ngIf="dragableLessons[day.Id][hour.Id][0]"
-                            [ngClass]="{'conflict':dragableLessons[day.Id][hour.Id][0].HasConflict}"
+                            [ngClass]="{'conflict':(dragableLessons[day.Id][hour.Id][0].HasConflict && dragableLessons[day.Id][hour.Id][0].HasConflict.length>0)}"
                             >
                                 {{dragableLessons[day.Id][hour.Id][0].Name}}
                                 <br />
                                 <div class="h6">
                                     {{dragableLessons[day.Id][hour.Id][0].Teacher.FirstName}}
                                     {{dragableLessons[day.Id][hour.Id][0].Teacher.LastName}}
+                                </div>
+                                <div *ngFor="let conflict of dragableLessons[day.Id][hour.Id][0].HasConflict">
+                                    {{conflict.Class.Grade.Name}}'{{conflict.Class.Number}}:{{conflict.Lesson.Name}}
                                 </div>
                             </div>
                         </td>
@@ -48,6 +51,9 @@
         <div class="row justify-content-center">
             <div class="col-4">
                 <button (click)="saveSchedule()" class="btn btn-outline-dark">שמירת מערכת</button>
+            </div>
+            <div class="col-4">
+                <button (click)="cancel()" class="btn btn-outline-dark">ביטול</button>
             </div>
             <div class="col-4">
                 <div class="row justify-content-center">

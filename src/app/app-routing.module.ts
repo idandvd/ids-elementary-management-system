@@ -13,12 +13,15 @@ import { ManageLessonsComponent } from './manage-lessons/manage-lessons.componen
 import { AuthGuard } from './_guards';
 import { UserType } from './_models';
 import { TeacherScheduleComponent } from './teacher-schedule/teacher-schedule.component';
+import { ClassesPageComponent } from './classes-page/classes-page.component';
+import { ManageStudentsComponent } from './manage-students/manage-students.component';
 
 const routes: Routes = [
   //{ path: 'login', component: LoginFormComponent },
-  { path: '', component: TeacherScheduleComponent, canActivate: [AuthGuard] },
+  { path: '', component: TeacherScheduleComponent},
   { path: 'main', component: ShowEntireDataBaseComponent },
-  { path: 'ClassPage', component: ClassPageComponent, canActivate: [AuthGuard], data: { userType: [UserType.User,UserType.Admin] } },
+  { path: 'ClassPage/:classId', component: ClassPageComponent, canActivate: [AuthGuard], data: { userType: [UserType.User,UserType.Admin] } },
+  { path: 'ClassesPage', component: ClassesPageComponent, canActivate: [AuthGuard], data: { userType: [UserType.User,UserType.Admin] } },
   { path: 'AddLesson', component: AddLessonFormComponent },
   { path: 'AddTeacherType', component: AddTeacherTypeFormComponent },
   { path: 'AddStudent', component: AddStudentFormComponent },
@@ -26,7 +29,8 @@ const routes: Routes = [
   { path: 'ManageClasses', component: ManageClassesComponent, canActivate: [AuthGuard], data: { userType: [UserType.Admin] } },
   { path: 'ManageTeachers', component: ManageTeachersComponent, canActivate: [AuthGuard], data: { userType: [UserType.Admin] } },
   { path: 'ManageLessons', component: ManageLessonsComponent, canActivate: [AuthGuard], data: { userType: [UserType.Admin] } },
-  { path: 'TeacherSchedule', component: TeacherScheduleComponent, canActivate: [AuthGuard], data: { userType: [UserType.User] } },
+  { path: 'TeacherSchedule', component: TeacherScheduleComponent, canActivate: [AuthGuard] },
+  { path: 'ManageStudents/:classId', component: ManageStudentsComponent, canActivate: [AuthGuard] },
   { path: '**', redirectTo: '' }
 ];
 

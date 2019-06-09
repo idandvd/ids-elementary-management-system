@@ -1,15 +1,88 @@
 <div class="row justify-content-center mt-3">
-  <div class="col col-sm-9 border pb-2 px-4">
+  <div class="col col-sm-11 border pb-2 px-4">
     <h2>מורים</h2>
+    <div class="form-group form-inline row justify-content-center">
+      <label class="mx-3">
+        <input id="addItem" required [(ngModel)]="manageType" name="manageType" value="addItem" type="radio"
+          class="form-control col-1 mx-1">הוספה</label>
+      <label class="mx-3">
+        <input id="saveItem" required [(ngModel)]="manageType" name="manageType" value="saveItem" type="radio"
+          class="form-control col-1 mx-1">עריכה</label>
+      <label class="mx-3">
+        <input id="import" required [(ngModel)]="manageType" name="manageType" value="import" type="radio"
+          class="form-control col-1 mx-1">ייבוא</label>
+    </div>
   </div>
 </div>
 <div class="row justify-content-center mt-3" *ngIf="!(teachers && teacherTypes && users && classes) ">
-  <div class="col col-sm-9 border pb-2 px-4">
+  <div class="col col-sm-11 border pb-2 px-4">
     <h2>טוען נתונים</h2>
   </div>
 </div>
-<div class="row justify-content-center mt-3" *ngIf="teachers && teacherTypes && users && classes">
-  <div class="col col-sm-9 border pb-2 px-4">
+
+
+
+<div class="row justify-content-center mt-3" *ngIf="manageType=='addItem' && teacherTypes && users && classes">
+  <div class="col col-sm-11 border pb-2 px-4">
+    <h2>הוספת מורה</h2>
+    <form (ngSubmit)="addTeacher()">
+      <div class="form-group form-inline row mb-2 mr-1 ">
+        <label class="col-4">שם פרטי</label>
+        <input id="FirstName" required [(ngModel)]="newTeacher.FirstName" name="FirstName" type="text"
+          class="form-control col-8" placeholder="שם פרטי">
+      </div>
+      <div class="form-group form-inline row mb-2 mr-1 ">
+        <label class="col-4">שם משפחה</label>
+
+        <input id="LastName" required [(ngModel)]="newTeacher.LastName" name="LastName" type="text"
+          class="form-control col-8" placeholder="שם משפחה">
+      </div>
+      <div class="form-group form-inline row mb-2 mr-1 ">
+        <label class="col-4">סוג מורה</label>
+        <select class="form-control col-8" [(ngModel)]="newTeacherType" name="newTeacherType">
+          <ng-container *ngFor="let teacherType of teacherTypes">
+            <option [ngValue]="teacherType">
+              {{teacherType.Name}}
+            </option>
+          </ng-container>
+        </select>
+      </div>
+      <div class="form-group form-inline row mb-2 mr-1 ">
+        <label class="col-4">משתמש</label>
+        <select class="form-control col-8" [(ngModel)]="newTeacherUser" name="newTeacherUser">
+          <ng-container *ngFor="let user of users">
+            <option [ngValue]="user">
+              {{user.Username}}
+            </option>
+          </ng-container>
+        </select>
+      </div>
+      <div class="row justify-content-center">
+        <div class="col">
+          <h4>גישה לכיתות:</h4>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-2 text-left" *ngFor="let class of classes">
+          <input type="checkbox" (change)="classCheckboxOnChange(newTeacher,class,$event.target.checked)">
+          {{class.Grade.Name}}'{{class.Number}}
+        </div>
+      </div>
+      <div class="form-group row">
+        <div class="col text-center">
+          <button type="submit" class="btn btn-outline-dark">הוספת מורה</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+
+
+
+
+<div class="row justify-content-center mt-3"
+  *ngIf="manageType=='saveItem' && teachers && teacherTypes && users && classes">
+  <div class="col col-sm-11 border pb-2 px-4">
     <h2>עריכת מורה</h2>
     <form (ngSubmit)="saveTeacher()">
       <div class="form-group form-inline row">
@@ -50,7 +123,7 @@
               </ng-container>
             </select>
           </div>
-          <div class="form-group form-inline row mb-2 mr-1 ">
+          <div class="form-group form-inline row mb-2 mr-1">
             <label class="col-4">משתמש</label>
             <select class="form-control col-8" [(ngModel)]="selectedTeacherUser" name="selectedTeacherUser">
               <ng-container *ngFor="let user of users">
@@ -66,16 +139,19 @@
               <h4>גישה לכיתות:</h4>
             </div>
           </div>
-          <div class="row">
-            <div class="col-2" *ngFor="let class of classes">
+          <div class="row  ">
+            <div class="col-2 text-left" *ngFor="let class of classes">
               <input type="checkbox" [checked]="hasTeacherGotAccessToClass(class)"
                 (change)="classCheckboxOnChange(selectedTeacher,class,$event.target.checked)">
               {{class.Grade.Name}}'{{class.Number}}
             </div>
           </div>
           <div class="form-group row justify-content-center mt-3">
-            <div class="col text-center">
+            <div class="col-2 text-center">
               <button type="submit" class="btn btn-outline-dark">שמור מורה</button>
+            </div>
+            <div class="col-2 text-center">
+              <button type="button" (click)="deleteTeacher()" class="btn btn-outline-dark">מחק מורה</button>
             </div>
           </div>
         </div>
@@ -84,69 +160,13 @@
   </div>
 </div>
 
-<div class="row justify-content-center mt-3" *ngIf="teacherTypes && users && classes">
-  <div class="col col-sm-9 border pb-2 px-4">
-    <h2>הוספת מורה</h2>
-    <form (ngSubmit)="addTeacher()">
 
-      <div class="form-group form-inline row mb-2 mr-1 ">
-        <label class="col-4">שם פרטי</label>
 
-        <input id="FirstName" required [(ngModel)]="newTeacher.FirstName" name="FirstName" type="text"
-          class="form-control col-8" placeholder="שם פרטי">
-      </div>
-      <div class="form-group form-inline row mb-2 mr-1 ">
-        <label class="col-4">שם משפחה</label>
 
-        <input id="LastName" required [(ngModel)]="newTeacher.LastName" name="LastName" type="text"
-          class="form-control col-8" placeholder="שם משפחה">
-      </div>
-      <div class="form-group form-inline row mb-2 mr-1 ">
-        <label class="col-4">סוג מורה</label>
-        <select class="form-control col-8" [(ngModel)]="newTeacherType" name="newTeacherType">
-          <ng-container *ngFor="let teacherType of teacherTypes">
-            <option [ngValue]="teacherType">
-              {{teacherType.Name}}
-            </option>
-          </ng-container>
-        </select>
-      </div>
-      <div class="form-group form-inline row mb-2 mr-1 ">
-        <label class="col-4">משתמש</label>
-        <select class="form-control col-8" [(ngModel)]="newTeacherUser" name="newTeacherUser">
-          <ng-container *ngFor="let user of users">
-            <option [ngValue]="user">
-              {{user.Username}}
-            </option>
-          </ng-container>
-        </select>
-      </div>
-      <div class="row justify-content-center">
-        <div class="col">
-          <h4>גישה לכיתות:</h4>
 
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-2" *ngFor="let class of classes">
-          <input type="checkbox" (change)="classCheckboxOnChange(newTeacher,class,$event.target.checked)">
-          {{class.Grade.Name}}'{{class.Number}}
-        </div>
-      </div>
-      <div class="form-group row">
-        <div class="col text-center">
-          <button type="submit" class="btn btn-outline-dark">הוספת מורה</button>
-        </div>
-      </div>
-    </form>
-
-  </div>
-</div>
-<div class="row justify-content-center mt-3 ">
-  <div class="col col-sm-9 border pb-2 px-4">
-
+<div class="row justify-content-center mt-3 " *ngIf="manageType=='import'">
+  <div class="col col-sm-11 border pb-2 px-4">
     <h2>ייבוא נתונים מאקסל</h2>
-
     <input type="file" style="display: inline-block;" (change)="incomingfile($event)" placeholder="Upload file"
       accept=".xlsx">
     <button type="button" class="btn btn-info" (click)="Upload()">יבא נתונים</button>

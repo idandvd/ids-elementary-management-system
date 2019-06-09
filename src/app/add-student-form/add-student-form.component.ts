@@ -145,7 +145,7 @@ export class AddStudentFormComponent implements OnInit {
     this.file = event.target.files[0];
   }
 
-  Upload(files) {
+  Upload() {
     let fileToUpload = <File>this.file;
     const formData = new FormData();
     formData.append('file', fileToUpload, fileToUpload.name);

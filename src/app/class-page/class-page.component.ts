@@ -2,7 +2,10 @@ import { Component, OnInit, HostListener } from '@angular/core';
 import { ApiService } from '../api.service';
 import { CdkDragDrop, CdkDropList, CdkDrag, moveItemInArray, transferArrayItem, } from '@angular/cdk/drag-drop';
 import { ConnectedOverlayPositionChange } from '@angular/cdk/overlay';
-import { AlertService } from '../_services';
+import { AlertService, AuthenticationService } from '../_services';
+import { Teacher } from '../_models';
+import { ActivatedRoute } from '@angular/router';
+import { switchMap } from 'rxjs/operators';
 
 declare function drag(ev: any): any;
 
@@ -12,6 +15,8 @@ declare function drag(ev: any): any;
   styleUrls: ['./class-page.component.css']
 })
 export class ClassPageComponent implements OnInit {
+
+  public currentTeacher: Teacher;
 
   public classId;
   public classScheduleTable;
@@ -23,22 +28,28 @@ export class ClassPageComponent implements OnInit {
   public isInEdit;
   public ctrlPressed = false;
   constructor(private apiService: ApiService,
-    private alertService: AlertService) { }
+    private alertService: AlertService,
+    private authenticationService: AuthenticationService,
+    private route: ActivatedRoute
+    ) { }
 
   ngOnInit() {
-    this.classId = 2;
-    this.isInEdit = false;
+    this.authenticationService.currentTeacher.subscribe(x => this.currentTeacher = x);
+    this.classId = this.route.snapshot.paramMap.get('classId');
     this.getClassSchedule();
-    this.editSchedule();
+
+    this.isInEdit = false;
+    //this.editSchedule();
   }
+
+
+
 
   getClassSchedule() {
     this.apiService.getControllerById("ClassScheduleTable", this.classId).subscribe(
       data => {
         this.classScheduleTable = data;
-
         this.fillDragableLessons(data);
-
       },
       err => console.error(this.classId),
       () => { console.log('done loading ClassScheduleTable'); console.log(this.classScheduleTable); }
@@ -138,6 +149,12 @@ export class ClassPageComponent implements OnInit {
         err => { this.alertService.error("שגיאה בשמירת מערכת") },
         () => { }
       );
+  }
+  cancel()
+  {
+    this.isInEdit = false;
+    this.lessons = null;
+    this.fillClassSchedule();
   }
 
   @HostListener('window:keyup', ['$event'])

@@ -23,10 +23,13 @@ export class ApiService {
         return x;
     }
 
-
-
     getControllerById(controllerName, id) {
         var x = this.http.get(environment.api + controllerName + "/" + id);
+        return x;
+    }
+
+    getControllerByActionAndId(controllerName, action, id) {
+        var x = this.http.get(environment.api + controllerName + "/" + action + "/" + id);
         return x;
     }
 
@@ -56,6 +59,12 @@ export class ApiService {
     addModel(model, modelName) {
         const headers = new HttpHeaders({ 'Content-Type': 'application/json; charset=utf-8' });
         return this.http.post(environment.api + modelName + "/", JSON.stringify(model), { headers });
+
+    }
+
+    deleteModel(id, modelName) {
+        //const headers = new HttpHeaders({ 'Content-Type': 'application/json; charset=utf-8' });
+        return this.http.delete(environment.api + modelName + "/" + id);
 
     }
 
