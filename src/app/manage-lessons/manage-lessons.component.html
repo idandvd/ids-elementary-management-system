@@ -21,7 +21,7 @@
 </div>
 
 
-<div class="row justify-content-center mt-3 " *ngIf="manageType=='saveItem' && teachers && lessonTypes">
+<div class="row justify-content-center mt-3 " *ngIf="manageType=='addItem' && teachers && lessonTypes">
   <div class="col col-sm-11 border pb-2 px-4">
     <h2>הוספת שיעור</h2>
     <form (ngSubmit)="addLesson()">
@@ -85,7 +85,7 @@
 </div>
 
 
-<div class="row justify-content-center mt-3 " *ngIf="manageType=='addItem' && lessons && teachers && lessonTypes">
+<div class="row justify-content-center mt-3 " *ngIf="manageType=='saveItem' && lessons && teachers && lessonTypes">
   <div class="col col-sm-11 border pb-2 px-4">
     <h2>עריכת שיעור</h2>
     <form (ngSubmit)="saveLesson()">

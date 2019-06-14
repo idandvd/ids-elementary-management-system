@@ -1,36 +1,27 @@
-<div class="row justify-content-center mt-3 " >
-    <div class="col col-sm-11 border pb-2 px-4">
-      <h2>הדף בבניה</h2>
-    </div>
-  </div>
-
-<!-- <div *ngIf="classScheduleTable">
-  <h2>{{classScheduleTable.Class.Grade.Name}}'{{classScheduleTable.Class.Number}} </h2>
+<div *ngIf="teacherScheduleTable">
+  <!-- <h2>{{teacherScheduleTable.Class.Grade.Name}}'{{teacherScheduleTable.Class.Number}} </h2> -->
   <div class="row mt-5">
     <div class="table-responsive col-12">
       <table class="table table-bordered table-sm" #myTable [class.plus-cursor]="ctrlPressed">
         <thead>
           <th>ימים/שעות</th>
-          <th *ngFor="let day of classScheduleTable.Days ">
+          <th *ngFor="let day of teacherScheduleTable.Days ">
             {{day.Name}}
           </th>
         </thead>
-        <tr *ngFor="let hour of classScheduleTable.HoursInDay" [ngClass]="{'bg-light': hour.IsBreak}">
+        <tr *ngFor="let hour of teacherScheduleTable.HoursInDay" [ngClass]="{'bg-light': hour.IsBreak}">
           <td>{{hour.StartTime}}-{{hour.FinishTime}}</td>
           <ng-container *ngIf="!hour.IsBreak">
-            <td *ngFor="let day of classScheduleTable.Days" attr.id="Day{{day.Id}}$Hour{{hour.Id}}"
-              class="h5 text-center" cdkDropList [cdkDropListConnectedTo]="lists"
-              [cdkDropListData]="dragableLessons[day.Id][hour.Id]" (cdkDropListDropped)="drop($event)">
+            <td *ngFor="let day of teacherScheduleTable.Days" class="h5 text-center">
 
-              <div cdkDrag [cdkDragDisabled]="!isInEdit" *ngIf="dragableLessons[day.Id][hour.Id][0]"
-                [ngClass]="{'conflict':dragableLessons[day.Id][hour.Id][0].HasConflict}">
-                {{dragableLessons[day.Id][hour.Id][0].Name}}
-                <br />
-                <div class="h6">
-                  {{dragableLessons[day.Id][hour.Id][0].Teacher.FirstName}}
-                  {{dragableLessons[day.Id][hour.Id][0].Teacher.LastName}}
-                </div>
+
+              <div *ngIf="teacherScheduleTable.TeacherScheduleClasses[day.Id] &&
+                            teacherScheduleTable.TeacherScheduleClasses[day.Id][hour.Id] "
+                style="white-space: pre-wrap"
+                [ngClass]="{'conflict':(conflicts[day.Id][hour.Id])} ">
+                {{teacherScheduleTable.TeacherScheduleClasses[day.Id][hour.Id]}}
               </div>
+
             </td>
           </ng-container>
           <td *ngIf="hour.IsBreak" class="text-center" colspan="6">
@@ -40,4 +31,4 @@
       </table>
     </div>
   </div>
-</div> -->
+</div>

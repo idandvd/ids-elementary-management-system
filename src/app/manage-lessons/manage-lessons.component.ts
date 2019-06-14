@@ -79,6 +79,26 @@ export class ManageLessonsComponent implements OnInit {
     );
   }
 
+  addLesson() {
+    this.newLesson.Teacher = this.newLessonTeacher;
+    this.newLesson.LessonType = this.newLessonLessonType;
+    this.apiService.addModel(this.newLesson, "Lessons").subscribe(
+      data => { },
+      err => { this.alertService.error("שגיאה בשמירת נתונים"); },
+      () => {
+        this.lessons = null;
+        this.newLessonTeacher = null;
+        this.newLessonLessonType = null;
+        this.newLesson = {}
+        this.newLesson.HasEvaluation = true;
+        this.newLesson.HasGrade = false;
+        this.selectedLesson = null;
+        this.getLessons();
+        this.alertService.success("שיעור נשמר בהצלחה");
+      }
+    );
+  }
+
   saveLesson() {
     this.selectedLesson.Teacher = this.selectedLessonTeacher;
     this.selectedLesson.LessonType = this.selectedLessonLessonType;
@@ -92,23 +112,7 @@ export class ManageLessonsComponent implements OnInit {
     );
   }
 
-  addLesson() {
-    this.newLesson.Teacher = this.newLessonTeacher;
-    this.newLesson.LessonType = this.newLessonLessonType;
-    this.apiService.addModel(this.newLesson, "Lessons").subscribe(
-      data => { },
-      err => { this.alertService.error("שגיאה בשמירת נתונים"); },
-      () => {
-        this.lessons = null;
-        this.newLessonTeacher = null;
-        this.newLessonLessonType = null;
-        this.newLesson = {}
-        this.selectedLesson = null;
-        this.getLessons();
-        this.alertService.success("שיעור נשמר בהצלחה");
-      }
-    );
-  }
+
 
   deleteLesson() {
     if (confirm("מחיקת שיעור תמחק את כל הנתונים הקשורים לאותו שיעור.\n האם את/ה בטוח/ה שברצונך למחוק?")) {
