@@ -15,6 +15,10 @@ import { UserType } from './_models';
 import { TeacherScheduleComponent } from './teacher-schedule/teacher-schedule.component';
 import { ClassesPageComponent } from './classes-page/classes-page.component';
 import { ManageStudentsComponent } from './manage-students/manage-students.component';
+import { StudentsPageComponent } from './students-page/students-page.component';
+import { StudentPageComponent } from './student-page/student-page.component';
+import { GroupsPageComponent } from './groups-page/groups-page.component';
+import { AddGroupPageComponent } from './add-group-page/add-group-page.component';
 
 const routes: Routes = [
   //{ path: 'login', component: LoginFormComponent },
@@ -31,6 +35,10 @@ const routes: Routes = [
   { path: 'ManageLessons', component: ManageLessonsComponent, canActivate: [AuthGuard], data: { userType: [UserType.Admin] } },
   { path: 'TeacherSchedule', component: TeacherScheduleComponent, canActivate: [AuthGuard] },
   { path: 'ManageStudents/:classId', component: ManageStudentsComponent, canActivate: [AuthGuard] },
+  { path: 'StudentsPage/:classId', component: StudentsPageComponent, canActivate: [AuthGuard] },
+  { path: 'StudentPage/:studentId', component: StudentPageComponent, canActivate: [AuthGuard] },
+  { path: 'GroupsPage', component: GroupsPageComponent, canActivate: [AuthGuard] },
+  { path: 'AddGroupPage', component: AddGroupPageComponent, canActivate: [AuthGuard] },
   { path: '**', redirectTo: '' }
 ];
 

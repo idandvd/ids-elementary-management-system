@@ -1,0 +1,9 @@
+<div class="row">
+  <a [routerLink]="['/StudentPage/', student.Id]" class="col-6 col-md-2 col-sm-4" *ngFor="let student of students">
+    <figure>
+      <img *ngIf="student.PicturePath" src="{{student.PicturePath}}" style="max-height:75px;">
+      <img *ngIf="!student.PicturePath" src="assets/pictures/male.jpg" style="max-height:75px;">
+      <figcaption>{{student.Name}}</figcaption>
+    </figure>
+  </a>
+</div>

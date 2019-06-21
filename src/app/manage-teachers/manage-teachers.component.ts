@@ -151,7 +151,7 @@ export class ManageTeachersComponent implements OnInit {
     if (confirm("מחיקת מורה תמחק את כל הנתונים הקשורים לאותו מורה.\n האם את/ה בטוח/ה שברצונך למחוק?")) {
       this.selectedTeacher.TeacherType = this.selectedTeacherType;
       this.selectedTeacher.User = this.selectedTeacherUser;
-      this.apiService.deleteModel(this.selectedTeacher.Id, "Teachers").subscribe(
+      this.apiService.deleteModelById(this.selectedTeacher.Id, "Teachers").subscribe(
         () => { },
         () => { this.alertService.error("שגיאה בשמירת נתונים"); },
         () => {

@@ -261,6 +261,7 @@ CREATE TABLE students_schedules (
 	student_id INT(11) NOT NULL,
     PRIMARY KEY (id),
     UNIQUE KEY id_UNIQUE (id),
+    UNIQUE KEY students_schedules_UNIQUE (day_id,hour_id,student_id),
     CONSTRAINT students_schedule_day_id FOREIGN KEY (day_id)
         REFERENCES days(id)
         ON DELETE NO ACTION ON UPDATE NO ACTION,

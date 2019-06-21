@@ -19,15 +19,19 @@ export class NavigationBarComponent implements OnInit {
     private apiService: ApiService,
     private authenticationService: AuthenticationService) {
     this.authenticationService.currentTeacher.subscribe(x => this.currentTeacher = x);
-    console.log(this.currentTeacher);
+    // console.log(this.currentTeacher);
     this.getTeacherClasses();
   }
 
   getTeacherClasses() {
     this.apiService.getControllerByActionAndId("Teachers", "Class", this.currentTeacher.Id).subscribe(
-      data => { this.classes = data; console.log(data) },
+      data => { this.classes = data;
+        //  console.log(data) 
+        },
       err => console.error(this.classes),
-      () => { console.log('done loading Teachers Classes'); }
+      () => { 
+        // console.log('done loading Teachers Classes'); 
+      }
     );
   }
   ngOnInit() {

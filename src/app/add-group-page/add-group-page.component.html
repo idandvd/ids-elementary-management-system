@@ -1,0 +1,31 @@
+<div class="form container text-center">
+  <div class="form-row justify-content-around">
+    <label class="col-4" for="Lesson">שיעור</label>
+
+    <div class="col-8 col-sm-8 col-md-6 col-lg-6 col-xl-4 mb-2">
+      <select class="form-control" [(ngModel)]="selectedLesson" name="selectedLesson">
+        <ng-container *ngFor="let lesson of lessons">
+          <option [ngValue]="lesson">
+            {{lesson.Name}} - {{lesson.Teacher.FirstName}} {{lesson.Teacher.LastName}} - {{lesson.LessonType.Name}}
+          </option>
+        </ng-container>
+      </select>
+
+    </div>
+  </div>
+
+  <div class="form-row">
+    <span class="form-control col-12 col-sm-6 col-md-4 col-lg-3 col-xl-2 d-inline-flex justify-content-start"
+      *ngFor="let student of students;let i = index;">
+      <input id="student{{student.Id}}" name ="student{{student.Id}}" [(ngModel)]="students[i].checked" type="checkbox">
+      <label>{{student.Name}} </label>
+    </span>
+
+
+  </div>
+  <div class="form-row justify-content-center">
+    <button (click)="saveGroup()" class="btn btn-outline-dark">שמור</button>
+    <button class="btn btn-outline-dark">בטל</button>
+  </div>
+
+</div>

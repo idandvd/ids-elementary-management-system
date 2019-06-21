@@ -118,7 +118,7 @@ export class ManageLessonsComponent implements OnInit {
     if (confirm("מחיקת שיעור תמחק את כל הנתונים הקשורים לאותו שיעור.\n האם את/ה בטוח/ה שברצונך למחוק?")) {
       this.selectedLesson.Teacher = this.selectedLessonTeacher;
       this.selectedLesson.LessonType = this.selectedLessonLessonType;
-      this.apiService.deleteModel(this.selectedLesson.Id, "Lessons").subscribe(
+      this.apiService.deleteModelById(this.selectedLesson.Id, "Lessons").subscribe(
         data => { },
         err => { this.alertService.error("שגיאה בשמירת נתונים"); },
         () => {

@@ -150,7 +150,7 @@ export class ManageStudentsComponent implements OnInit {
 
   deleteStudent() {
     if (confirm("מחיקת תלמיד תמחק את כל הנתונים הקשורים לאותו תלמיד.\n האם את/ה בטוח/ה שברצונך למחוק?")) {
-      this.apiService.deleteModel(this.selectedStudent.Id, "Teachers").subscribe(
+      this.apiService.deleteModelById(this.selectedStudent.Id, "Teachers").subscribe(
         () => { },
         () => { this.alertService.error("שגיאה בשמירת נתונים"); },
         () => {

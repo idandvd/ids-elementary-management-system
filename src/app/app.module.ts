@@ -33,6 +33,10 @@ import { JwtInterceptor, ErrorInterceptor } from './_helpers';
 import { TeacherScheduleComponent } from './teacher-schedule/teacher-schedule.component';
 import { ClassesPageComponent } from './classes-page/classes-page.component';
 import { ManageStudentsComponent } from './manage-students/manage-students.component';
+import { StudentsPageComponent } from './students-page/students-page.component';
+import { StudentPageComponent } from './student-page/student-page.component';
+import { GroupsPageComponent } from './groups-page/groups-page.component';
+import { AddGroupPageComponent } from './add-group-page/add-group-page.component';
 
 
 
@@ -53,6 +57,10 @@ import { ManageStudentsComponent } from './manage-students/manage-students.compo
     TeacherScheduleComponent,
     ClassesPageComponent,
     ManageStudentsComponent,
+    StudentsPageComponent,
+    StudentPageComponent,
+    GroupsPageComponent,
+    AddGroupPageComponent,
   ],
   imports: [
     BrowserModule,

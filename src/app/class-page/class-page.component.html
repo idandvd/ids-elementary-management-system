@@ -20,7 +20,7 @@
 
                             <div cdkDrag [cdkDragDisabled]="!isInEdit" *ngIf="dragableLessons[day.Id][hour.Id][0]"
                             [ngClass]="{'conflict':(dragableLessons[day.Id][hour.Id][0].HasConflict && dragableLessons[day.Id][hour.Id][0].HasConflict.length>0)}"
-                            >
+                            (dblclick)="gotoGroup(day.Id,hour.Id)">
                                 {{dragableLessons[day.Id][hour.Id][0].Name}}
                                 <br />
                                 <div class="h6">

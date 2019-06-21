@@ -2,7 +2,7 @@
   <!-- <h2>{{teacherScheduleTable.Class.Grade.Name}}'{{teacherScheduleTable.Class.Number}} </h2> -->
   <div class="row mt-5">
     <div class="table-responsive col-12">
-      <table class="table table-bordered table-sm" #myTable [class.plus-cursor]="ctrlPressed">
+      <table class="table table-bordered table-sm" #myTable>
         <thead>
           <th>ימים/שעות</th>
           <th *ngFor="let day of teacherScheduleTable.Days ">
@@ -15,11 +15,11 @@
             <td *ngFor="let day of teacherScheduleTable.Days" class="h5 text-center">
 
 
-              <div *ngIf="teacherScheduleTable.TeacherScheduleClasses[day.Id] &&
-                            teacherScheduleTable.TeacherScheduleClasses[day.Id][hour.Id] "
+              <div *ngIf="teacherScheduleTable.TeacherSchedule[day.Id] &&
+                            teacherScheduleTable.TeacherSchedule[day.Id][hour.Id] "
                 style="white-space: pre-wrap"
                 [ngClass]="{'conflict':(conflicts[day.Id][hour.Id])} ">
-                {{teacherScheduleTable.TeacherScheduleClasses[day.Id][hour.Id]}}
+                {{teacherScheduleTable.TeacherSchedule[day.Id][hour.Id]}}
               </div>
 
             </td>

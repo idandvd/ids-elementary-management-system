@@ -1,0 +1,69 @@
+<div *ngIf="studentScheduleTable">
+  <img *ngIf="student.PicturePath" class="figure-img img-fluid" src="{{student.PicturePath}}" width="350" /><br />
+  <img *ngIf="!student.PicturePath" class="figure-img img-fluid" src="assets/pictures/male.jpg" width="350">
+  <h1>{{student.Name}}</h1>
+  <h2>{{student.Class.Grade.Name}}'{{student.Class.Number}}<br /></h2>
+
+  <div class="row justify-content-center">
+    <div class="col-12 ">
+      <div class="row h6">
+        <div class="col-12 col-sm-6 border rounded">
+          שם האם : {{student.Mother.Name}}
+        </div>
+        <div class="col-12 col-sm-6 border rounded">
+          שם האב : {{student.Father.Name}}
+        </div>
+        <div class="col-12 col-sm-6 border rounded">
+          נייד האם : {{student.Mother.Cellphone}}
+        </div>
+        <div class="col-12 col-sm-6 border rounded">
+          נייד האב : {{student.Father.Cellphone}}
+        </div>
+        <div class="col-12 col-sm-6 border rounded">
+          אי-מייל האם: {{student.Mother.Email}}
+        </div>
+        <div class="col-12 col-sm-6 border rounded">
+          אי-מייל האב: {{student.Father.Email}}
+        </div>
+        <div class="col-12 col-sm-6 border rounded">
+          טלפון : {{student.HomePhone}}
+        </div>
+        <div class="col-12 col-sm-6 border rounded">
+          יישוב : {{student.Settlement}}
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <div class="row mt-5">
+    <div class="table-responsive col-12">
+      <table class="table table-bordered table-sm" #myTable>
+        <thead>
+          <th>ימים/שעות</th>
+          <th *ngFor="let day of studentScheduleTable.Days ">
+            {{day.Name}}
+          </th>
+        </thead>
+        <tr *ngFor="let hour of studentScheduleTable.HoursInDay" [ngClass]="{'bg-light': hour.IsBreak}">
+          <td>{{hour.StartTime}}-{{hour.FinishTime}}</td>
+          <ng-container *ngIf="!hour.IsBreak">
+            <td *ngFor="let day of studentScheduleTable.Days" class="h5 text-center">
+
+
+              <div *ngIf="studentScheduleTable.StudentSchedule[day.Id] &&
+                            studentScheduleTable.StudentSchedule[day.Id][hour.Id] " style="white-space: pre-wrap"
+                class="h6">
+                {{studentScheduleTable.StudentSchedule[day.Id][hour.Id]}}
+              </div>
+
+            </td>
+          </ng-container>
+          <td *ngIf="hour.IsBreak" class="text-center" colspan="6">
+            הפסקה
+          </td>
+        </tr>
+      </table>
+    </div>
+  </div>
+</div>

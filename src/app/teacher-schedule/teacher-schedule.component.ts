@@ -27,23 +27,23 @@ export class TeacherScheduleComponent implements OnInit {
     this.authenticationService.currentTeacher.subscribe(x => this.currentTeacher = x);
     // this.getHoursInDay();
     // this.getDays();
-    this.getTeacherSchedule();
+    this.getTeacherScheduleTable();
 
   }
 
-  getTeacherSchedule() {
+  getTeacherScheduleTable() {
     this.apiService.getControllerByActionAndId("Teachers", "Schedule", this.currentTeacher.Id).subscribe(
       data => {
         this.teacherScheduleTable = data;
-        this.replaceNewLines()
+        this.setConflicts()
       },
       err => console.error(this.classId),
-      () => { console.log('done loading TheacerScheduleTable'); console.log(this.teacherScheduleTable); }
+      () => { console.log('done loading TeachersScheduleTable'); console.log(this.teacherScheduleTable); }
     );
 
   }
 
-  replaceNewLines() {
+  setConflicts() {
     let data = this.teacherScheduleTable
     for (let day of data.Days) {
       this.conflicts.push(day.Id);
@@ -51,37 +51,13 @@ export class TeacherScheduleComponent implements OnInit {
       for (let hour of data.HoursInDay) {
         this.conflicts[day.Id].push(hour.Id);
         
-        if (data.TeacherScheduleClasses[day.Id] && data.TeacherScheduleClasses[day.Id][hour.Id]) {
+        if (data.TeacherSchedule[day.Id] && data.TeacherSchedule[day.Id][hour.Id]) {
           this.conflicts[day.Id][hour.Id] = 
-          (data.TeacherScheduleClasses[day.Id][hour.Id].match(/\n/g) || []).length > 0
+          (data.TeacherSchedule[day.Id][hour.Id].match(/\n/g) || []).length > 0
         }
       }
     }
   }
 
-  // getClasses() {
-  //   this.apiService.getController("Classes").subscribe(
-  //     data => { this.classes = data; },
-  //     err => console.error(this.classId),
-  //     () => { console.log('done loading Classes'); console.log(this.classes); }
-  //   );
-
-  // }
-  // getHoursInDay() {
-  //   this.apiService.getController("HoursInDay").subscribe(
-  //     data => { this.hoursInDay = data; },
-  //     err => console.error(this.classId),
-  //     () => { console.log('done loading HoursInDay'); console.log(this.hoursInDay); }
-  //   );
-
-  // }
-  // getDays() {
-  //   this.apiService.getController("Days").subscribe(
-  //     data => { this.days = data; },
-  //     err => console.error(this.classId),
-  //     () => { console.log('done loading Days'); console.log(this.days); }
-  //   );
-
-  // }
 
 }

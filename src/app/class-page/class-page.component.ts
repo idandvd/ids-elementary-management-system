@@ -4,7 +4,7 @@ import { CdkDragDrop, CdkDropList, CdkDrag, moveItemInArray, transferArrayItem, 
 import { ConnectedOverlayPositionChange } from '@angular/cdk/overlay';
 import { AlertService, AuthenticationService } from '../_services';
 import { Teacher } from '../_models';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { switchMap } from 'rxjs/operators';
 
 declare function drag(ev: any): any;
@@ -30,8 +30,9 @@ export class ClassPageComponent implements OnInit {
   constructor(private apiService: ApiService,
     private alertService: AlertService,
     private authenticationService: AuthenticationService,
-    private route: ActivatedRoute
-    ) { }
+    private route: ActivatedRoute,
+    private router: Router
+  ) { }
 
   ngOnInit() {
     this.authenticationService.currentTeacher.subscribe(x => this.currentTeacher = x);
@@ -42,8 +43,10 @@ export class ClassPageComponent implements OnInit {
     //this.editSchedule();
   }
 
-
-
+  gotoGroup(dayId, hourId) {
+    let classId = this.classId;
+    this.router.navigate(['/GroupsPage/', { classId, dayId, hourId }]);
+  }
 
   getClassSchedule() {
     this.apiService.getControllerById("ClassScheduleTable", this.classId).subscribe(
@@ -69,8 +72,8 @@ export class ClassPageComponent implements OnInit {
           this.lists.push('cdk-drop-list-' + listsCount);
           this.dragableLessons[day.Id][hour.Id] = [];
 
-          if (data.ClassSchedules['Day' + day.Id + '$Hour' + hour.Id]) {
-            this.dragableLessons[day.Id][hour.Id].push(data.ClassSchedules['Day' + day.Id + '$Hour' + hour.Id]);
+          if (data.ClassSchedule['Day' + day.Id + '$Hour' + hour.Id]) {
+            this.dragableLessons[day.Id][hour.Id].push(data.ClassSchedule['Day' + day.Id + '$Hour' + hour.Id]);
 
 
           }
@@ -97,11 +100,11 @@ export class ClassPageComponent implements OnInit {
         if (!hour.IsBreak) {
           if (this.dragableLessons[day.Id][hour.Id].length > 0 &&
             this.dragableLessons[day.Id][hour.Id][0]) {
-            this.classScheduleTable.ClassSchedules['Day' + day.Id + '$Hour' + hour.Id] =
+            this.classScheduleTable.ClassSchedule['Day' + day.Id + '$Hour' + hour.Id] =
               this.dragableLessons[day.Id][hour.Id][0];
           }
           else {
-            delete this.classScheduleTable.ClassSchedules['Day' + day.Id + '$Hour' + hour.Id]
+            delete this.classScheduleTable.ClassSchedule['Day' + day.Id + '$Hour' + hour.Id]
           }
 
         }
@@ -150,8 +153,7 @@ export class ClassPageComponent implements OnInit {
         () => { }
       );
   }
-  cancel()
-  {
+  cancel() {
     this.isInEdit = false;
     this.lessons = null;
     this.fillClassSchedule();
@@ -222,4 +224,5 @@ export class ClassPageComponent implements OnInit {
     console.log(event);
     console.log(event.previousContainer === event.container);
   }
+
 }

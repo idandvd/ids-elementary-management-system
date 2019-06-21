@@ -45,6 +45,11 @@ export class ApiService {
         return this.http.get(environment.api + "ClassScheduleTable/HasConflict/" + day_id + "/" + hour_id + "/" + teacher_id + "/" + class_id, { headers });
     }
 
+    GetGroups(class_id, day_id, hour_id) {
+        const headers = new HttpHeaders({ 'Content-Type': ' charset=utf-8' });
+        return this.http.get(environment.api + "Groups/GetGroups/" + class_id + "/" + day_id + "/" + hour_id, { headers });
+    }
+
     saveClassSchecule(schedule) {
         const headers = new HttpHeaders({ 'Content-Type': 'application/json; charset=utf-8' });
         return this.http.post(environment.api + "ClassScheduleTable/", JSON.stringify(schedule), { headers });
@@ -62,10 +67,17 @@ export class ApiService {
 
     }
 
-    deleteModel(id, modelName) {
+    deleteModelById(id, modelName) {
         //const headers = new HttpHeaders({ 'Content-Type': 'application/json; charset=utf-8' });
         return this.http.delete(environment.api + modelName + "/" + id);
-
+    }
+    deleteModel(model, modelName) {
+        const headers = new HttpHeaders({ 'Content-Type': 'application/json; charset=utf-8' });
+        const body = JSON.stringify(model);
+        const options = {headers: new HttpHeaders({ 'Content-Type': 'application/json; charset=utf-8' }),
+            body: model
+        }
+        return this.http.delete(environment.api + modelName + "/", options);
     }
 
     saveModelWithRoute(model, modelName, route) {
