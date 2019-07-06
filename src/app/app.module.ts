@@ -37,6 +37,8 @@ import { StudentsPageComponent } from './students-page/students-page.component';
 import { StudentPageComponent } from './student-page/student-page.component';
 import { GroupsPageComponent } from './groups-page/groups-page.component';
 import { AddGroupPageComponent } from './add-group-page/add-group-page.component';
+import { TeacherLessonsPageComponent } from './teacher-lessons-page/teacher-lessons-page.component';
+import { LessonEvaluationPageComponent } from './lesson-evaluation-page/lesson-evaluation-page.component';
 
 
 
@@ -61,6 +63,8 @@ import { AddGroupPageComponent } from './add-group-page/add-group-page.component
     StudentPageComponent,
     GroupsPageComponent,
     AddGroupPageComponent,
+    TeacherLessonsPageComponent,
+    LessonEvaluationPageComponent,
   ],
   imports: [
     BrowserModule,

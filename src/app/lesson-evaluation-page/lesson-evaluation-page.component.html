@@ -1,0 +1,51 @@
+<h2 *ngIf=" lessonClasses && lessonClasses.length==0">אינך מלמד אף כיתה במקצוע זה</h2>
+<h2 *ngIf="lesson && (!lesson.HasEvaluation && !lesson.HasGrade)">במקצוע זה אין הערכות או ציונים</h2>
+<div class="row justify-content-center mt-5" *ngIf="lesson && lessonClasses && lessonClasses.length>0 ">
+  <ng-container *ngIf="(evaluations && lesson.HasEvaluation) || (grades && lesson.HasGrade) ">
+    <div class="col">
+      <h2>{{lesson.Name}}</h2>
+      <h4>הנתונים נשמרים באופן אוטומטי, בסיום ניתן לצאת מהעמוד</h4>
+
+      <div class="form-group form-inline row justify-content-center">
+        <div class="col-6">
+          <div class="row">
+            <label class="col-form-label col-sm-3  col-md-4">כיתה:</label>
+            <select [(ngModel)]="selectedClass" class="form-control col col-sm-9 col-md-8"
+              (ngModelChange)="onClassChange()">
+              <option [ngValue]="class" *ngFor="let class of lessonClasses">{{class.Grade.Name}}'{{class.Number}}
+              </option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group form-inline row">
+        <div class="form-control col">
+          <table class="table table-striped table-bordered table-sm" cellspacing="0" rules="all">
+            <tr>
+              <th class="font-weight-bold">שם תלמיד</th>
+              <th> תמונה</th>
+              <th *ngIf="lesson.HasEvaluation"> הערכה</th>
+              <th *ngIf="lesson.HasGrade"> ציון</th>
+            </tr>
+            <tr *ngFor="let student of classStudents">
+              <td style="width:10%;">{{student.FirstName}} {{student.LastName}}</td>
+              <td style="width:10%;">
+                <img *ngIf="student.PicturePath" src="{{student.PicturePath}}" style="height:85px;" />
+                <img *ngIf="!student.PicturePath" src="assets/pictures/male.jpg" style="height:85px;" />
+              </td>
+              <td style="width:70%;" *ngIf="lesson.HasEvaluation">
+                <textarea rows="3" cols="25" class="form-control w-100" (ngModelChange)="saveEvaluation($event,student)"
+                  [(ngModel)]="student.Evaluation"></textarea>
+              </td>
+              <td style="width:10%;" *ngIf="lesson.HasGrade">
+                <input type="number" class="form-control w-100" min="0" max="100"
+                  (ngModelChange)="saveGrade($event,student)" [(ngModel)]="student.Grade" />
+              </td>
+            </tr>
+          </table>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+</div>

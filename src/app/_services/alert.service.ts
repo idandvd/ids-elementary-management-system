@@ -34,20 +34,20 @@ export class AlertService {
     }
 
     // convenience methods
-    success(message: string) {
-        this.alert(new Alert({ message, type: AlertType.Success }));
+    success(message: string, keepAfterRouteChange: boolean = false) {
+        this.alert(new Alert({ message, type: AlertType.Success, keepAfterRouteChange  }));
     }
 
-    error(message: string) {
-        this.alert(new Alert({ message, type: AlertType.Error }));
+    error(message: string, keepAfterRouteChange: boolean = false) {
+        this.alert(new Alert({ message, type: AlertType.Error, keepAfterRouteChange  }));
     }
 
-    info(message: string) {
-        this.alert(new Alert({ message, type: AlertType.Info }));
+    info(message: string, keepAfterRouteChange: boolean = false) {
+        this.alert(new Alert({ message, type: AlertType.Info, keepAfterRouteChange  }));
     }
 
-    warn(message: string) {
-        this.alert(new Alert({ message, type: AlertType.Warning }));
+    warn(message: string, keepAfterRouteChange: boolean = false) {
+        this.alert(new Alert({ message, type: AlertType.Warning, keepAfterRouteChange }));
     }
 
     // main alert method    

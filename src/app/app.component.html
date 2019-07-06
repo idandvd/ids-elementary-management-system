@@ -4,7 +4,10 @@
 
     <app-login-form *ngIf="!currentTeacher" (loggedInEvent)="receiveLoggedIn($event)"></app-login-form>
     <alert></alert>
-    <router-outlet *ngIf="currentTeacher"  >
+    <!-- <h2>
+        האתר בתהליכי בדיקה
+    </h2> -->
+    <router-outlet *ngIf="currentTeacher">
     </router-outlet>
-</div> 
+</div>
 <!--<app-login-form></app-login-form>-->

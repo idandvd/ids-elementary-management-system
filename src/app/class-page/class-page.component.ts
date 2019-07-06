@@ -27,6 +27,11 @@ export class ClassPageComponent implements OnInit {
   public FilterString;
   public isInEdit;
   public ctrlPressed = false;
+  public viewType = "limited";
+  public groups;
+
+  public listsCount = 0;
+
   constructor(private apiService: ApiService,
     private alertService: AlertService,
     private authenticationService: AuthenticationService,
@@ -40,36 +45,51 @@ export class ClassPageComponent implements OnInit {
     this.getClassSchedule();
 
     this.isInEdit = false;
+
     //this.editSchedule();
   }
 
   gotoGroup(dayId, hourId) {
-    let classId = this.classId;
-    this.router.navigate(['/GroupsPage/', { classId, dayId, hourId }]);
+    if (!this.isInEdit) {
+      let classId = this.classId;
+      this.router.navigate(['/GroupsPage/', { classId, dayId, hourId }]);
+    }
   }
 
   getClassSchedule() {
     this.apiService.getControllerById("ClassScheduleTable", this.classId).subscribe(
       data => {
         this.classScheduleTable = data;
-        this.fillDragableLessons(data);
+        // this.classScheduleTable.HoursInDay
+        
+        this.getGroups();
+
       },
       err => console.error(this.classId),
       () => { console.log('done loading ClassScheduleTable'); console.log(this.classScheduleTable); }
     );
+  }
 
+  getGroups() {
+    this.apiService.GetGroupsByClass(this.classId).subscribe(
+      data => {
+        this.groups = data;
+        this.fillDragableLessons(this.classScheduleTable);
+      },
+      err => { console.error("Error loading Groups"); },
+      () => { console.log("Done loading Groups");  }
+    )
   }
 
 
   fillDragableLessons(data) {
     this.dragableLessons = {};
     this.lists = [];
-    let listsCount = 0;
     for (let day of data.Days) {
       this.dragableLessons[day.Id] = {};
       for (let hour of data.HoursInDay) {
         if (!hour.IsBreak) {
-          this.lists.push('cdk-drop-list-' + listsCount);
+          this.lists.push('cdk-drop-list-' + this.listsCount);
           this.dragableLessons[day.Id][hour.Id] = [];
 
           if (data.ClassSchedule['Day' + day.Id + '$Hour' + hour.Id]) {
@@ -84,12 +104,21 @@ export class ClassPageComponent implements OnInit {
           this.dragableLessons[day.Id][hour.Id].push(day.Id);
           this.dragableLessons[day.Id][hour.Id].push(hour.Id);
           this.hasConflict(this.dragableLessons[day.Id][hour.Id]);
-          listsCount += 1;
+          this.listsCount += 1;
         }
       }
     }
     this.lists.push('lessonsList');
     this.lists.push('trashList');
+    this.listsCount += 2;
+
+
+    for (let group of this.groups) {
+      console.log(group);
+
+      this.dragableLessons[group.Day.Id][group.Hour.Id].push(group);
+    }
+
     console.log(this.lists);
   }
 
@@ -124,6 +153,7 @@ export class ClassPageComponent implements OnInit {
   }
 
   editSchedule() {
+    this.viewType = "limited";
     this.isInEdit = true;
     this.apiService.getController("Lessons").subscribe(
       data => {
@@ -140,6 +170,14 @@ export class ClassPageComponent implements OnInit {
     );
 
   }
+
+  cancelEdit() {
+    this.isInEdit = false;
+    this.lessons = null;
+    this.getClassSchedule();
+    //this.fillClassSchedule();
+  }
+
   saveSchedule() {
     this.isInEdit = false;
     this.lessons = null;
@@ -148,16 +186,16 @@ export class ClassPageComponent implements OnInit {
     this.fillClassSchedule();
     this.apiService.saveClassSchecule(this.classScheduleTable)
       .subscribe(
-        data => { this.alertService.success("מערכת נשמרה בהצלחה") },
+        data => { },
         err => { this.alertService.error("שגיאה בשמירת מערכת") },
-        () => { }
+        () => {
+          this.alertService.success("מערכת נשמרה בהצלחה");
+        }
       );
+    this.listsCount += 2;
+
   }
-  cancel() {
-    this.isInEdit = false;
-    this.lessons = null;
-    this.fillClassSchedule();
-  }
+
 
   @HostListener('window:keyup', ['$event'])
   keyupEvent(event: KeyboardEvent) {
@@ -205,7 +243,7 @@ export class ClassPageComponent implements OnInit {
     }
     if (event.container.data.length >= 1) {
       let temp = previousData[0]
-      previousData[0] = event.container.data[event.currentIndex];
+      previousData[0] = event.container.data[0];
       nextData[0] = temp;
       console.log(nextData);
 

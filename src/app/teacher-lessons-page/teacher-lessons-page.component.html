@@ -1,0 +1,9 @@
+<div class="row justify-content-center">
+  <div class="col-6 col-sm-3" *ngIf="lessons">
+    <div class="h4">השיעורים שלך:</div>
+    <div class="btn-group-vertical">
+      <button *ngFor="let lesson of lessons" (click)="gotoLessonEvaluation(lesson)" class="btn btn-outline-dark">{{lesson.Name}} - {{lesson.LessonType.Name}}</button>
+    </div>
+
+  </div>
+</div>

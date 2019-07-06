@@ -1,7 +1,7 @@
 import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { ApiService } from '../api.service';
 import { Router, ActivatedRoute } from '@angular/router';
-import { AuthenticationService } from '../_services';
+import { AuthenticationService, AlertService } from '../_services';
 import { first } from 'rxjs/operators';
 
 @Component({
@@ -21,6 +21,7 @@ export class LoginFormComponent implements OnInit {
 
   constructor(private apiService: ApiService,
     private route: ActivatedRoute,
+    private alertService: AlertService,
 
     private router: Router,
     private authenticationService: AuthenticationService) { }
@@ -34,12 +35,17 @@ export class LoginFormComponent implements OnInit {
     this.authenticationService.login(this.username, this.password)
       .pipe(first())
       .subscribe(
-        data => { console.log(this.returnUrl);console.log(data);
-          this.router.navigate([this.returnUrl]); },
-        error => { console.log("wrong login"); },
-        () => { console.log("!!!");
-          this.loggedInEvent.emit(true); }
-
+        data => {
+          console.log(this.returnUrl); console.log(data);
+          this.router.navigate([this.returnUrl]);
+        },
+        error => {
+          console.log("wrong login");
+          this.alertService.error("שגיאה בכניסה");
+        },
+        () => {
+          this.loggedInEvent.emit(true);
+        }
       );
 
     return;

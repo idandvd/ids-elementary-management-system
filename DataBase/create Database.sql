@@ -315,6 +315,7 @@ CREATE TABLE lessons_evaluations (
 	student_id INT(11) NOT NULL,
     PRIMARY KEY (id),
     UNIQUE KEY id_UNIQUE (id),
+    UNIQUE KEY lessons_evaluations_UNIQUE (lesson_id,student_id),
 	CONSTRAINT lessons_evaluations_lesson_id FOREIGN KEY (lesson_id)
         REFERENCES lessons(id)
         ON DELETE NO ACTION ON UPDATE NO ACTION,
@@ -382,7 +383,20 @@ UNLOCK TABLES;
 
 LOCK TABLES `hours_in_day` WRITE;
 /*!40000 ALTER TABLE `hours_in_day` DISABLE KEYS */;
-INSERT INTO `hours_in_day` VALUES (1,1,'08:10:00','08:50:00','\0',1),(2,2,'08:50:00','09:30:00','\0',1),(3,3,'09:30:00','09:45:00',b'1',1),(4,4,'09:45:00','10:25:00','\0',1),(5,5,'10:25:00','10:45:00',b'1',1),(6,6,'10:45:00','11:30:00','\0',1);
+INSERT INTO `hours_in_day` VALUES 
+(1,1,'08:10:00','08:50:00','\0',1),
+(2,2,'08:50:00','09:05:00',b'1',1),
+(3,3,'09:05:00','09:50:00',b'0',1),
+(4,4,'09:50:00','10:30:00',b'0',1),
+(5,5,'10:30:00','10:50:00',b'1',1),
+(6,6,'10:50:00','11:35:00',b'0',1),
+(7,7,'11:35:00','12:20:00','\0',1),
+(8,8,'12:20:00','12:45:00',b'1',1),
+(9,9,'12:45:00','13:30:00','\0',1),
+(10,10,'13:30:00','13:50:00',b'1',1),
+(11,11,'13:50:00','14:40:00',b'0',1),
+(12,12,'14:40:00','15:15:00',b'0',1);
+
 /*!40000 ALTER TABLE `hours_in_day` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -392,6 +406,12 @@ LOCK TABLES `lesson_types` WRITE;
 INSERT INTO `lesson_types` VALUES (2,'קבוצה'),(1,'שיעור');
 /*!40000 ALTER TABLE `lesson_types` ENABLE KEYS */;
 UNLOCK TABLES;
+
+insert into resheet.teacher_types(name) 
+values("מנהל");
+
+insert into  resheet.teachers(first_name,last_name,cellphone,teacher_type_id,user_id,year_id)
+values("עידן","דוד","054-5555555",1,1,1)
 
 #insert into classes(grade_id,number,year_id) values(1,2,1);
 #insert into students(first_name,last_name,class_id,year_id) values('עידן','דוד',1,1);

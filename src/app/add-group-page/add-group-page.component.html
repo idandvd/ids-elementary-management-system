@@ -1,5 +1,8 @@
-<div class="form container text-center">
-  <div class="form-row justify-content-around">
+<h3 *ngIf="students && students.length == 0"> אין תלמידים בכיתה</h3>
+<h2>יצירת קבוצה</h2>
+<div class="form container text-center" >
+  <div class="form-row justify-content-around" *ngIf="students && students.length > 0">
+    
     <label class="col-4" for="Lesson">שיעור</label>
 
     <div class="col-8 col-sm-8 col-md-6 col-lg-6 col-xl-4 mb-2">
@@ -24,8 +27,8 @@
 
   </div>
   <div class="form-row justify-content-center">
-    <button (click)="saveGroup()" class="btn btn-outline-dark">שמור</button>
-    <button class="btn btn-outline-dark">בטל</button>
+    <button (click)="saveGroup()" *ngIf="students && students.length > 0" class="btn btn-outline-dark" >שמור</button>
+    <button (click)="cancel()" class="btn btn-outline-dark">בטל</button>
   </div>
 
 </div>

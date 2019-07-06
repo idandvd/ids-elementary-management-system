@@ -1,6 +1,24 @@
-<div *ngIf="classScheduleTable">
-    <h2>{{classScheduleTable.Class.Grade.Name}}'{{classScheduleTable.Class.Number}} </h2>
-    <div class="row mt-5">
+<div *ngIf="classScheduleTable && dragableLessons">
+    <h3>{{classScheduleTable.Class.Grade.Name}}'{{classScheduleTable.Class.Number}} </h3>
+    <h6 *ngIf="!isInEdit">ליצירה ולצפייה בקבוצות יש ללחוץ לחיצה כפולה(double click) על שיעור.</h6>
+    <h6>משבצות בצבע צהוב מורות על כך שהמורה מלמד גם בכיתה אחרת באותה שעה.</h6>
+    <h6 *ngIf="isInEdit">יש לגרור את השיעור הרצוי למשבצת הרצויה.</h6>
+    <h6 *ngIf="isInEdit">ניתן לגרור משבצת למשבצת אחרת כדי להחליף שיעורים.</h6>
+    <h6 *ngIf="isInEdit">ע"י לחיצה על ctrl תוך כדי גרירה, ניתן להעתיק משבצת.</h6>
+    <div class="row justify-content-center mt-1">
+        <div class="col" *ngIf="!isInEdit">
+            <div class="form-group form-inline  row justify-content-center">
+                <label class="mx-3">
+                    <input id="limitedView" required [(ngModel)]="viewType" name="viewType" value="limited" type="radio"
+                        class="form-control col-1 mx-1">תצוגה מצומצת</label>
+                <label class="mx-3">
+                    <input id="regularView" required [(ngModel)]="viewType" name="viewType" value="regular" type="radio"
+                        class="form-control col-1 mx-1">תצוגה רגילה</label>
+                <label class="mx-3">
+                    <input id="extendedView" required [(ngModel)]="viewType" name="viewType" value="extended"
+                        type="radio" class="form-control col-1 mx-1">תצוגה מורחבת</label>
+            </div>
+        </div>
         <div class="table-responsive col-12">
             <table class="table table-bordered table-sm" #myTable [class.plus-cursor]="ctrlPressed">
                 <thead>
@@ -10,26 +28,45 @@
                     </th>
                 </thead>
                 <tr *ngFor="let hour of classScheduleTable.HoursInDay" [ngClass]="{'bg-light': hour.IsBreak}">
-                    <td>{{hour.StartTime}}-{{hour.FinishTime}}</td>
+                    <td>{{hour.StartTime.substring(0,5)}}-{{hour.FinishTime.substring(0,5)}}</td>
                     <ng-container *ngIf="!hour.IsBreak">
                         <td *ngFor="let day of classScheduleTable.Days" attr.id="Day{{day.Id}}$Hour{{hour.Id}}"
-                            class="h5 text-center"
-
-                            cdkDropList [cdkDropListConnectedTo]="lists"
+                            class="h5 text-center" cdkDropList [cdkDropListConnectedTo]="lists"
                             [cdkDropListData]="dragableLessons[day.Id][hour.Id]" (cdkDropListDropped)="drop($event)">
 
                             <div cdkDrag [cdkDragDisabled]="!isInEdit" *ngIf="dragableLessons[day.Id][hour.Id][0]"
-                            [ngClass]="{'conflict':(dragableLessons[day.Id][hour.Id][0].HasConflict && dragableLessons[day.Id][hour.Id][0].HasConflict.length>0)}"
-                            (dblclick)="gotoGroup(day.Id,hour.Id)">
+                                [ngClass]="{'conflict':(dragableLessons[day.Id][hour.Id][0].HasConflict && dragableLessons[day.Id][hour.Id][0].HasConflict.length>0)}"
+                                (dblclick)="gotoGroup(day.Id,hour.Id)">
                                 {{dragableLessons[day.Id][hour.Id][0].Name}}
-                                <br />
-                                <div class="h6">
+                                <br *ngIf="viewType =='limited' || true"/><!--remove '|| true' to remove br-->
+                                <!-- <span *ngIf="viewType !='limited'"> - </span> --><!--uncomment to add dash-->
+                                <span class="h6">
                                     {{dragableLessons[day.Id][hour.Id][0].Teacher.FirstName}}
                                     {{dragableLessons[day.Id][hour.Id][0].Teacher.LastName}}
-                                </div>
+                                </span>
                                 <div *ngFor="let conflict of dragableLessons[day.Id][hour.Id][0].HasConflict">
                                     {{conflict.Class.Grade.Name}}'{{conflict.Class.Number}}:{{conflict.Lesson.Name}}
                                 </div>
+                                <h6 *ngIf=" dragableLessons[day.Id][hour.Id].length>2">
+                                    <ng-container *ngIf="viewType =='regular'">
+                                        <div *ngFor="let group of dragableLessons[day.Id][hour.Id]; let i=index">
+                                            <div *ngIf="i >= 3">
+                                                *{{group.Lesson.Name}}
+                                            </div>
+                                        </div>
+                                    </ng-container>
+                                    <ng-container *ngIf="viewType =='extended'">
+                                        <div *ngFor="let group of dragableLessons[day.Id][hour.Id]; let i=index">
+                                            <div *ngIf="i >= 3">
+                                                *{{group.Lesson.Name}} -
+                                                <span *ngFor="let student of group.Students;last as isLast">
+                                                    {{student.FirstName}} {{student.LastName}}<span *ngIf="!isLast">,
+                                                    </span>
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </ng-container>
+                                </h6>
                             </div>
                         </td>
                     </ng-container>
@@ -53,7 +90,7 @@
                 <button (click)="saveSchedule()" class="btn btn-outline-dark">שמירת מערכת</button>
             </div>
             <div class="col-4">
-                <button (click)="cancel()" class="btn btn-outline-dark">ביטול</button>
+                <button (click)="cancelEdit()" class="btn btn-outline-dark">ביטול</button>
             </div>
             <div class="col-4">
                 <div class="row justify-content-center">
@@ -67,7 +104,7 @@
         <div class="row justify-content-center border-3">
             <div cdkDropList id="trashList" [cdkDropListConnectedTo]="lists" [cdkDropListData]="lists"
                 [cdkDropListData]="lessons" (cdkDropListDropped)="drop($event)">
-                <div id="trash" class=" col m-5 h2">
+                <div id="trash" class=" col m-4 h2">
                     <i class="fas fa-trash-alt"></i> מחיקת שיעור
                 </div>
             </div>

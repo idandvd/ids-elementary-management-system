@@ -35,9 +35,10 @@
       </div>
     </div>
   </div>
-
+  
   <div class="row mt-5">
     <div class="table-responsive col-12">
+        <h5> * - קבוצה</h5>
       <table class="table table-bordered table-sm" #myTable>
         <thead>
           <th>ימים/שעות</th>
@@ -53,7 +54,7 @@
 
               <div *ngIf="studentScheduleTable.StudentSchedule[day.Id] &&
                             studentScheduleTable.StudentSchedule[day.Id][hour.Id] " style="white-space: pre-wrap"
-                class="h6">
+                class="h6" >
                 {{studentScheduleTable.StudentSchedule[day.Id][hour.Id]}}
               </div>
 

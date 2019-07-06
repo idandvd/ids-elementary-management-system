@@ -19,6 +19,8 @@ import { StudentsPageComponent } from './students-page/students-page.component';
 import { StudentPageComponent } from './student-page/student-page.component';
 import { GroupsPageComponent } from './groups-page/groups-page.component';
 import { AddGroupPageComponent } from './add-group-page/add-group-page.component';
+import { TeacherLessonsPageComponent } from './teacher-lessons-page/teacher-lessons-page.component';
+import { LessonEvaluationPageComponent } from './lesson-evaluation-page/lesson-evaluation-page.component';
 
 const routes: Routes = [
   //{ path: 'login', component: LoginFormComponent },
@@ -39,6 +41,8 @@ const routes: Routes = [
   { path: 'StudentPage/:studentId', component: StudentPageComponent, canActivate: [AuthGuard] },
   { path: 'GroupsPage', component: GroupsPageComponent, canActivate: [AuthGuard] },
   { path: 'AddGroupPage', component: AddGroupPageComponent, canActivate: [AuthGuard] },
+  { path: 'TeacherLessonsPage', component: TeacherLessonsPageComponent, canActivate: [AuthGuard] },
+  { path: 'LessonEvaluationPage', component: LessonEvaluationPageComponent, canActivate: [AuthGuard] },
   { path: '**', redirectTo: '' }
 ];
 

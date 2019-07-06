@@ -29,7 +29,7 @@ export class GroupsPageComponent implements OnInit {
   }
 
   getGroups() {
-    this.apiService.GetGroups(this.classId, this.dayId, this.hourId).subscribe(
+    this.apiService.GetGroupsByTime(this.classId, this.dayId, this.hourId).subscribe(
       data => { this.groups = data; },
       err => { console.error("Error loading Groups"); },
       () => { console.log("Done loading Groups");console.log(this.groups);  }

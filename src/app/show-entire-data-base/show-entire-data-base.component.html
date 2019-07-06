@@ -1,20 +1,23 @@
-
-
-
 <ul>
   <li *ngFor="let controller of controllersNames">
     {{controller.Name}}
     <table class="border" *ngIf="tables[controller.Name]!=null">
       <thead>
-        <th *ngFor="let col of tables[controller.Name][0] | keyvalue">
-          {{col.key}}
-        </th>
+        <ng-template ngFor let-col [ngForOf]="tables[controller.Name][0] | keyvalue">
+          <th *ngIf="col.key!='TableName' && col.key!='ListName'">
+            {{col.key}}
+          </th>
+        </ng-template>
       </thead>
-      <div [innerHTML] = "genHTML(controller.Name)"></div>
+      <div [innerHTML]="genHTML(controller.Name)"></div>
       <tr *ngFor="let row of tables[controller.Name] ">
-        <td *ngFor="let col of row | keyvalue">
-          {{col.value}}
-        </td>
+        <ng-template ngFor let-col [ngForOf]="row | keyvalue">
+          <td *ngIf="col.key!='TableName' && col.key!='ListName'">
+
+            <div *ngIf="col.value && !col.value.Id">{{col.value}}</div>
+            <div *ngIf="col.value && col.value.Id">{{col.value.Id}}</div>
+          </td>
+        </ng-template>
       </tr>
     </table>
   </li>

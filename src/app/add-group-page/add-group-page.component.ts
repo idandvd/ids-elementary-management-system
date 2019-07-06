@@ -95,19 +95,39 @@ export class AddGroupPageComponent implements OnInit {
     let classId = this.classId;
     let dayId = this.dayId;
     let hourId = this.hourId;
+    let result;
     let group: { [key: string]: any } = {};
     group.Day = this.day;
     group.Hour = this.hour;
     group.lesson = this.selectedLesson;
     group.Students = this.students.filter(student => student.checked);
     this.apiService.addModel(group, "Groups").subscribe(
-      () => { },
-      () => { console.error("error") },
-      () => {
-        this.router.navigate(['/GroupsPage/', { classId, dayId, hourId }]);
-        console.log("Ok");
+      (data) => {
+        result = data;
+        if (result.m_Item2 != 0 || result.m_Item3 != 0) {
+          this.alertService.clear();
+          this.alertService.warn("מספר תלמידים שנשמרו בהצלחה:" + result.m_Item1 + "\n" +
+            "מספר תלמידים שלא נשמרו בהצלחה:" + result.m_Item2 + "\n" +
+            "מספר תלמידים שנמצאים בקבוצה אחרת:" + result.m_Item3 , true);
+
+          this.router.navigate(['/GroupsPage/', { classId, dayId, hourId }]);
+
+
+        }
+        else {
+          this.alertService.success("קבוצה נשמרה בהצלחה", true);
+          this.router.navigate(['/GroupsPage/', { classId, dayId, hourId }]);
+        }
       },
+      () => { this.alertService.error("שגיאה בשמירת קבוצה");},
+      () => { console.log("Ok"); },
 
     )
+  }
+  cancel() {
+    let classId = this.classId;
+    let dayId = this.dayId;
+    let hourId = this.hourId;
+    this.router.navigate(['/GroupsPage/', { classId, dayId, hourId }]);
   }
 }

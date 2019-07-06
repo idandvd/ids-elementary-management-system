@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ApiService } from '../api.service';
 import { AlertService, AuthenticationService } from '../_services';
 import { Teacher } from '../_models';
+import { forkJoin } from 'rxjs';
 
 @Component({
   selector: 'app-manage-teachers',
@@ -17,7 +18,12 @@ export class ManageTeachersComponent implements OnInit {
   public teachers;
   public teacherTypes;
   public users;
+  public userTypes;
   public manageType = "addItem";
+
+
+  public isNewUser;
+  public newUser: { [key: string]: any } = {};
 
 
   public selectedTeacher;
@@ -31,7 +37,7 @@ export class ManageTeachersComponent implements OnInit {
   constructor(private apiService: ApiService,
     private authenticationService: AuthenticationService,
     private alertService: AlertService) {
-      
+
     this.authenticationService.currentTeacher.subscribe(x => this.currentTeacher = x);
 
   }
@@ -39,6 +45,9 @@ export class ManageTeachersComponent implements OnInit {
   ngOnInit() {
 
     this.newTeacher.ClassAccess = [];
+    this.isNewUser = true;
+
+    this.getUserTypes();
     this.getClasses();
     this.getTeachers();
     this.getTeacherTypes();
@@ -58,6 +67,14 @@ export class ManageTeachersComponent implements OnInit {
     this.selectedTeacherUser = this.users.filter(user => {
       return user.Id === selectedTeacher.User.Id;
     })[0];
+  }
+
+  getUserTypes() {
+    this.apiService.getController("UserTypes").subscribe(
+      (data) => { this.userTypes = data; },
+      (err) => { console.error("Error loading UserTypes"); },
+      () => { console.log("Done loading UserTypes"); }
+    )
   }
 
   getClasses() {
@@ -127,9 +144,10 @@ export class ManageTeachersComponent implements OnInit {
     );
 
   }
-  addTeacher() {
+
+  addTeacherToDB() {
     this.newTeacher.TeacherType = this.newTeacherType;
-    this.newTeacher.User = this.newTeacherUser;
+
     this.apiService.saveModelWithRoute(this.newTeacher, "Teachers", "Save").subscribe(
       () => { },
       () => { this.alertService.error("שגיאה בשמירת נתונים"); },
@@ -137,16 +155,35 @@ export class ManageTeachersComponent implements OnInit {
 
         this.newTeacherType = null;
         this.newTeacherUser = null;
+        this.users = null;
+        this.newUser = {};
         this.newTeacher = {}
         this.newTeacher.ClassAccess = [];
         this.selectedTeacher = null;
         this.getTeachers();
+        this.getUsers();
         this.alertService.success("מורה נשמר בהצלחה");
       }
     );
-
-
   }
+
+  addTeacher() {
+    if (this.isNewUser) {
+      this.apiService.addModel(this.newUser, "Users").subscribe(
+        (data) => { this.newUser.Id = data; },
+        (err) => { },
+        () => {
+          this.newTeacher.User = this.newUser;
+          this.addTeacherToDB();
+        }
+      );
+    }
+    else {
+      this.newTeacher.User = this.newTeacherUser;
+      this.addTeacherToDB();
+    }
+  }
+
   deleteTeacher() {
     if (confirm("מחיקת מורה תמחק את כל הנתונים הקשורים לאותו מורה.\n האם את/ה בטוח/ה שברצונך למחוק?")) {
       this.selectedTeacher.TeacherType = this.selectedTeacherType;

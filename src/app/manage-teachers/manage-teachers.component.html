@@ -38,6 +38,11 @@
           class="form-control col-8" placeholder="שם משפחה">
       </div>
       <div class="form-group form-inline row mb-2 mr-1 ">
+          <label class="col-4">טלפון נייד</label>
+          <input id="Cellphone" required [(ngModel)]="newTeacher.Cellphone" name="Cellphone" type="text"
+            class="form-control col-8" placeholder="טלפון נייד">
+        </div>
+      <div class="form-group form-inline row mb-2 mr-1 ">
         <label class="col-4">סוג מורה</label>
         <select class="form-control col-8" [(ngModel)]="newTeacherType" name="newTeacherType">
           <ng-container *ngFor="let teacherType of teacherTypes">
@@ -47,16 +52,63 @@
           </ng-container>
         </select>
       </div>
-      <div class="form-group form-inline row mb-2 mr-1 ">
-        <label class="col-4">משתמש</label>
-        <select class="form-control col-8" [(ngModel)]="newTeacherUser" name="newTeacherUser">
-          <ng-container *ngFor="let user of users">
-            <option [ngValue]="user">
-              {{user.Username}}
-            </option>
-          </ng-container>
-        </select>
+
+      <div class="form-group form-inline row">
+        <label class="col-4" for="isNewUser">שם משתמש</label>
+        <label class="col-8">
+          <div class="row justify-content-end text-left">
+            <input id="isNewUser" required [(ngModel)]="isNewUser" name="isNewUser" [value]="true" type="radio"
+              class="form-control col-1 m-2">חדש
+            <input id="isNotNewUser" required [(ngModel)]="isNewUser" name="isNewUser" [value]="false" type="radio"
+              class="form-control col-1 m-2">קיים
+          </div>
+        </label>
       </div>
+
+      <div class="form-group form-inline row" *ngIf="isNewUser">
+        <label class="col-4"></label>
+        <div class="col-8 border pt-2 ">
+
+          <div class="form-group form-inline row mb-2 mr-1 ">
+            <label class="col-4">שם משתמש</label>
+            <input id="Username" required [(ngModel)]="newUser.Username" name="Username" type="text"
+              class="form-control col-8" placeholder="שם משתמש">
+          </div>
+          <div class="form-group form-inline row mb-2 mr-1 ">
+            <label class="col-4">ססמה</label>
+            <input id="Password" required [(ngModel)]="newUser.Password" name="Password" type="text"
+              class="form-control col-8" placeholder="ססמה">
+          </div>
+          <div class="form-group form-inline row mb-2 mr-1 ">
+            <label class="col-4">סוג משתמש</label>
+            <select class="form-control col-8" [(ngModel)]="newUser.UserType" name="newUser">
+              <ng-container *ngFor="let userType of userTypes">
+                <option [ngValue]="userType">
+                  {{userType.Name}}
+                </option>
+              </ng-container>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group form-inline row" *ngIf="!isNewUser">
+        <label class="col-4"></label>
+        <div class="col-8 border pt-2 ">
+
+          <div class="form-group form-inline row mb-2 mr-1 ">
+            <label class="col-4">משתמש</label>
+            <select class="form-control col-8" [(ngModel)]="newTeacherUser" name="newTeacherUser">
+              <ng-container *ngFor="let user of users">
+                <option [ngValue]="user">
+                  {{user.Username}}
+                </option>
+              </ng-container>
+            </select>
+          </div>
+        </div>
+      </div>
+
       <div class="row justify-content-center">
         <div class="col">
           <h4>גישה לכיתות:</h4>
@@ -84,8 +136,9 @@
   *ngIf="manageType=='saveItem' && teachers && teacherTypes && users && classes">
   <div class="col col-sm-11 border pb-2 px-4">
     <h2>עריכת מורה</h2>
-    <form (ngSubmit)="saveTeacher()">
-      <div class="form-group form-inline row">
+    <h3 *ngIf="teachers.length == 0"> אין מורים לעריכה</h3>
+    <form (ngSubmit)="saveTeacher()" *ngIf="teachers.length != 0">
+      <div class="form-group form-inline row mb-2 mr-1 ">
         <label class="col-4" for="Teacher">מורה</label>
         <select class="form-control col-8" [(ngModel)]="selectedTeacher" name="selectedTeacher"
           (ngModelChange)="onTeacherChange($event)">
@@ -123,6 +176,10 @@
               </ng-container>
             </select>
           </div>
+
+
+
+
           <div class="form-group form-inline row mb-2 mr-1">
             <label class="col-4">משתמש</label>
             <select class="form-control col-8" [(ngModel)]="selectedTeacherUser" name="selectedTeacherUser">

@@ -88,7 +88,9 @@
 <div class="row justify-content-center mt-3 " *ngIf="manageType=='saveItem' && lessons && teachers && lessonTypes">
   <div class="col col-sm-11 border pb-2 px-4">
     <h2>עריכת שיעור</h2>
-    <form (ngSubmit)="saveLesson()">
+    <h3 *ngIf="lessons.length == 0"> אין שיעורים לעריכה</h3>
+
+    <form (ngSubmit)="saveLesson()" *ngIf="lessons.length != 0">
 
       <div class="form-group form-inline row">
         <label class="col-4" for="Lesson">שיעור</label>

@@ -8,9 +8,9 @@
       <label class="mx-3">
         <input id="saveItem" required [(ngModel)]="manageType" name="manageType" value="saveItem" type="radio"
           class="form-control col-1 mx-1">עריכה</label>
-      <label class="mx-3">
-        <input id="import" required [(ngModel)]="manageType" name="manageType" value="import" type="radio"
-          class="form-control col-1 mx-1">ייבוא</label>
+      <label class="mx-3" *ngIf="classId == 0 ">
+        <input id="import" *ngIf="classId == 0 " required [(ngModel)]="manageType" name="manageType" value="import"
+          type="radio" class="form-control col-1 mx-1">ייבוא</label>
     </div>
   </div>
 </div>
@@ -177,7 +177,8 @@
   *ngIf="manageType=='saveItem' && students && classes && mothers && fathers">
   <div class="col col-sm-11 border pb-2 px-4">
     <h2>עריכת תלמיד</h2>
-    <form (ngSubmit)="saveStudent()">
+    <h3 *ngIf="students.length == 0"> אין תלמידים להצגה</h3>
+    <form (ngSubmit)="saveStudent()" *ngIf="students.length != 0">
       <div class="form-group form-inline row">
         <label class="col-4" for="selectedStudent">בחר תלמיד</label>
         <select class="form-control col-8" [(ngModel)]="selectedStudent" name="selectedStudent"
